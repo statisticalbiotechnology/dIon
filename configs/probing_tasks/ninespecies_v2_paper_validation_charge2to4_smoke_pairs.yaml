@@ -1,0 +1,27 @@
+# Noncanonical quick smoke only: common charge-2--4 subset for GLEAMS/Casanovo.
+pair_discrimination_evaluation:
+  name: 9spec_v2_val_cb_charge2to4_smoke_pairs
+  dataset:
+    spectra_path: /path/to/data/probing_datasets/ninespecies_v2_paper_validation_charge2to4_smoke/pair_discrimination/spectra.parquet
+    pairs_path: /path/to/data/probing_datasets/ninespecies_v2_paper_validation_charge2to4_smoke/pair_discrimination/pairs.parquet
+    manifest_path: /path/to/data/probing_datasets/ninespecies_v2_paper_validation_charge2to4_smoke/pair_discrimination/manifest.json
+  selection:
+    seed: 20260817
+    max_pairs_per_partition_per_label:
+  extraction:
+    batch_size: 256
+    num_workers: 2
+    pin_memory: true
+    show_progress: true
+  metrics_device: model
+  pair_metrics:
+    metric: cosine
+    balanced_pair_fdr_levels: [0.01, 0.05, 0.10]
+    purity_coverage_levels: [0.01, 0.05, 0.10, 0.25, 0.50, 0.75, 1.0]
+  output:
+    write_report: true
+    report_tag: 9spec_v2_val_charge2to4_smoke
+    report_path:
+    print_report: true
+  online:
+    enabled: false

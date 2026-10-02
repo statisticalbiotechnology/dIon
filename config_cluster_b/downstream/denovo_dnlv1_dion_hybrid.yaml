@@ -1,0 +1,57 @@
+# Matched DINO-input de novo training on dIon-de-novo-labeled-v1 (DNLv1).
+# This recipe uses the hybrid checkpoint's encoder interface: default filtering,
+# basepeak scaling, m/z [0, 2500], 200 peaks, and mass/charge inputs.
+task: denovo
+dataset_name: configurable_lance
+tokenizer:
+  source: numeric_mass_delta_manifest
+  manifest: configs/tokenizers/pa11.json
+  special_tokens:
+    pad_token: X
+    bos_token: <EOS>
+    eos_token: <EOS>
+    add_unk_token: false
+top_peaks: 200
+pep_length:
+- 0
+- 100
+charge:
+- 0
+- 10
+buffer_size: 10000
+label_name: seq
+precursor_mz_name: precursor_mz
+precursor_mass_name: false
+train_lance: train.lance
+# V5's deterministic mskb_final-derived validation split is the primary monitor.
+val_lance: val.lance
+test_lance: test.lance
+denovo_tf:
+  encoder_precursor_conditioning: conditioned
+  # Match the archived Pairwise de novo recipe; protects full-encoder updates.
+  gradient_clip_val: 2.0
+  batch_size: 100
+  decoder_dropout: 0.25
+  max_length: 100
+  reverse: true
+  precursor_mass_tol: 50
+  isotope_error_range:
+  - 0
+  - 1
+  min_peptide_len: 6
+  n_beams: 1
+  top_match: 1
+  calculate_precision: true
+  train_label_smoothing: 0.0
+  learning_rate: 0.0001
+  weight_decay: 0.0
+  warmup_steps: 6250  # Keep the established absolute warmup; only extend the post-warmup cosine decay.
+  cosine_period_steps: 263840  # 80 epochs of the cleaned 5,275,467-row V5 train split at global batch 1600.
+  epochs: 80
+  # Native V5 val.lance only: maximize peptide precision for checkpoint selection.
+  checkpoint_monitor: denovo_tf_val_pep_prec
+  checkpoint_mode: max
+metadata_columns:
+- peak_file
+- scan_id
+- title

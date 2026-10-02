@@ -1,0 +1,57 @@
+task: denovo
+dataset_name: configurable_lance
+tokenizer:
+  source: numeric_mass_delta_manifest
+  manifest: configs/tokenizers/pa11.json
+  special_tokens:
+    pad_token: X
+    bos_token: <EOS>
+    eos_token: <EOS>
+    add_unk_token: false
+top_peaks: 150
+pep_length:
+- 0
+- 100
+charge:
+- 0
+- 10
+buffer_size: 10000
+label_name: seq
+precursor_mz_name: precursor_mz
+precursor_mass_name: false
+train_lance: train.lance
+val_lance: val.lance
+test_lance: test.lance
+replay_train_lance: /path/to/data/denovo_kitchensink_v3/lance/train.lance
+replay_ratio: 1.5
+extra_val_sets:
+  charge_ge5_val: charge_ge5_val.lance
+  plasma_val: plasma_val.lance
+  legacy_v3_val: /path/to/data/highcharge_v3_splits_seed42/val.lance
+  kitchensink_v3_val: /path/to/data/denovo_kitchensink_v3/lance/val.lance
+  kitchensink_legacy_val: /path/to/data/denovo_kitchensink_no_usigrabber_v2/lance_compact/val.lance
+denovo_tf:
+  encoder_precursor_conditioning: none
+  gradient_clip_val: null
+  batch_size: 100
+  decoder_dropout: 0.25
+  max_length: 100
+  reverse: true
+  precursor_mass_tol: 50
+  isotope_error_range:
+  - 0
+  - 1
+  min_peptide_len: 6
+  n_beams: 1
+  top_match: 1
+  calculate_precision: true
+  train_label_smoothing: 0.0
+  learning_rate: 0.0001
+  weight_decay: 0.0
+  warmup_steps: 250
+  cosine_period_steps: 72000
+  epochs: 80
+metadata_columns:
+- peak_file
+- scan_id
+- title

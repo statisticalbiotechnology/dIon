@@ -1,0 +1,27 @@
+# Hard copy of retention_time_probe.yaml, switching only the target parameterization to scalar regression.
+task: retention_time
+dataset_name: auxiliary_lance
+top_peaks: 150
+
+retention_time:
+  checkpoint_monitor: retention_time_val_mae
+  checkpoint_mode: min
+  anneal_lr: true
+  anneal_per_step: true
+  lr_start: 1.0e-11
+  blr: 5.0e-4
+  head_lr: 5.0e-4
+  encoder_lr: 1.0e-5
+  lr_end: 1.0e-5
+  warmup_duration: 500
+  decay_delay: 0
+  decay_duration: 60000
+  batch_size: 128
+  ref_batch_size: 128
+  label_smoothing: 0
+  weight_decay: 0
+  epochs: 20
+  subset: 0
+  decoder_dropout: 0
+  target_column: nrt_aligned
+  prediction_mode: regression

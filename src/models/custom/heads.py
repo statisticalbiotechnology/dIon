@@ -1,0 +1,245 @@
+import numpy as np
+import src.models.custom.model_parts as mp
+import torch
+from torch import nn
+
+
+class ClassifierHead(nn.Module):
+    # Outputs a desired number (num_classes) of classes
+    # - One number for the ENTIRE SPECTRUM if spectrum_wise=False
+    # - One number for EACH PEAK if spectrum_wise=True
+    def __init__(
+        self,
+        num_classes,
+        in_units,
+        penult_units,
+        norm_type="layer",
+        spectrum_wise=False,
+        activation=nn.GELU,
+        dropout=0,
+    ):
+        super().__init__()
+        self.spectrum_wise = spectrum_wise
+        dropout = nn.Dropout1d(dropout)
+        norm = mp.get_norm_type(norm_type)
+        if isinstance(penult_units, int):
+            layers = [
+                nn.Linear(in_units, penult_units),
+                activation(),
+                norm(penult_units),
+            ]
+            last_units = penult_units
+        else:
+            layers = []
+            last_units = in_units
+            for units in penult_units:
+                layers += [
+                    nn.Linear(last_units, units),
+                    activation(),
+                    norm(units),
+                    dropout,
+                ]
+                last_units = units
+        self.penult = nn.Sequential(*layers)
+        self.final = nn.Linear(last_units, num_classes)
+
+    def forward(self, emb):
+        out = self.penult(emb)
+        out = self.final(out)
+        if self.spectrum_wise:
+            out = out.mean(dim=1)
+        return out
+
+
+class RegressorHead(ClassifierHead):
+    def __init__(
+        self,
+        in_units,
+        penult_units,
+        norm_type="layer",
+        spectrum_wise=True,
+        activation=nn.GELU,
+    ):
+        super().__init__(
+            num_classes=1,
+            in_units=in_units,
+            penult_units=penult_units,
+            norm_type=norm_type,
+            spectrum_wise=spectrum_wise,
+            activation=activation,
+        )
+
+    def forward(self, emb):
+        return super().forward(emb).abs()
+
+
+class SequenceHead(nn.Module):
+    def __init__(
+        self,
+        in_units,
+        final_units,
+        in_seq_len,
+        final_seq_len,
+        penult_units=512,
+        drop_rate=0,
+        norm_type="layer",
+    ):
+        super(SequenceHead, self).__init__()
+        self.final_units = final_units
+        self.final_seq_len = final_seq_len
+        self.penult_units = penult_units
+        self.norm_type = norm_type
+
+        norm = mp.get_norm_type(norm_type)
+
+        self.penult = nn.Sequential(
+            nn.Linear(in_units, penult_units),
+            nn.GELU(),
+            norm(penult_units),
+        )
+
+        self.final_sl = (
+            nn.Sequential(
+                nn.Linear(in_seq_len, final_seq_len),
+                nn.GELU(),
+                norm(final_seq_len),
+            )
+            if final_seq_len is not None
+            else None
+        )
+        self.drop = nn.Identity() if drop_rate == 0 else nn.Dropout(drop_rate)
+        self.final_ch = (
+            nn.Linear(penult_units, final_units)
+            if final_units is not None
+            else nn.Identity()
+        )
+
+    def forward(self, emb):
+        out = self.penult(emb)
+        if self.final_sl is not None:
+            out = self.final_sl(out.permute([0, 2, 1]))
+            out = out.permute([0, 2, 1])
+        out = self.drop(out)
+        out = self.final_ch(out)
+
+        return out
+
+
+class SpectrumHead(nn.Module):
+    def __init__(
+        self,
+        in_units,
+        bins,
+        penult_units=512,
+        sequence_length=100,
+        out_types=["mz", "ab"],
+        norm_type="layer",
+    ):
+        super(SpectrumHead, self).__init__()
+        self.in_units = in_units
+        self.bins = bins
+        self.out_types = out_types
+        self.penult_units = penult_units
+        self.norm_type = norm_type
+
+        norm = mp.get_norm_type(norm_type)
+
+        self.penult = nn.Sequential(
+            nn.Linear(in_units, penult_units),
+            nn.GELU(),
+            norm(penult_units),
+        )
+
+        # Do not accomodate rank with mz/ab
+        if "mz" in out_types:
+            self.final_mz = nn.Linear(penult_units, bins)
+        if "ab" in out_types:
+            self.final_ab = nn.Linear(penult_units, bins)
+
+    def forward(self, emb):
+        out = self.penult(emb)
+
+        if "mz" in self.out_types:
+            mz = self.final_mz(out)
+        else:
+            mz = None
+
+        if "ab" in self.out_types:
+            ab = self.final_ab(out)
+        else:
+            ab = None
+
+        return {"mz": mz, "ab": ab}
+
+
+class Header(nn.Module):
+    def __init__(self, head_dic, final_seq_len=None, final_ch=None, lr=1e-4):
+        super(Header, self).__init__()
+        self.head_dic = head_dic
+        self.name = "head"
+
+        IU = head_dic["in_units"]
+        self.heads = {}
+        if "pepseq" in head_dic.keys():
+            dic = head_dic["pepseq"]
+            self.heads["pepseq"] = SequenceHead(**dic, in_units=IU)
+
+        if "trinary_ab" in head_dic.keys():
+            dic = head_dic["trinary_ab"]
+            self.heads["trinary_ab"] = ClassifierHead(**dic, in_units=IU)
+
+        if "trinary_mz" in head_dic.keys():
+            dic = head_dic["trinary_mz"]
+            self.heads["trinary_mz"] = ClassifierHead(**dic, in_units=IU)
+
+        if "hidden_ab" in head_dic.keys():
+            dic = head_dic["hidden_ab"]
+            self.heads["hidden_ab"] = SpectrumHead(**dic, in_units=IU)
+
+        if "hidden_mz" in head_dic.keys():
+            dic = head_dic["hidden_mz"]
+            self.heads["hidden_mz"] = SpectrumHead(**dic, in_units=IU)
+
+        if "hidden_spectrum" in head_dic.keys():
+            dic = head_dic["hidden_spectrum"]
+            self.heads["hidden_spectrum"] = SpectrumHead(**dic, in_units=IU)
+
+        if "hidden_charge" in head_dic.keys():
+            dic = head_dic["hidden_charge"]
+            self.heads["hidden_charge"] = ClassifierHead(**dic, in_units=IU)
+
+        if "hidden_mass" in head_dic.keys():
+            dic = head_dic["hidden_mass"]
+            dic["num_classes"] = 3001
+            self.heads["hidden_mass"] = ClassifierHead(**dic, in_units=IU)
+
+        self.opts = {
+            key: torch.optim.Adam(self.heads[key].parameters(), lr=lr)
+            for key in self.heads.keys()
+        }
+
+    def forward(self, emb, outs="all"):
+        out = {}
+        if outs == "all":
+            outs = self.heads.keys()
+
+        for head_type in outs:
+            out[head_type] = self.heads[head_type](emb)
+
+        return out
+
+
+def sqa_mlp_head(tokenizer=None, d_model=512, dropout=0, num_classes=1, **kwargs):
+    """Established SQA MLP, with configurable output width for auxiliary tasks."""
+    model = ClassifierHead(num_classes, d_model, penult_units=[128, 64], dropout=dropout)
+    return model
+
+
+def linear_ordinal_head(tokenizer=None, d_model=512, num_classes=64, **kwargs):
+    """Strictly linear frozen-representation head for the RT diagnostic probe."""
+    return nn.Linear(d_model, num_classes)
+
+
+def linear_regression_head(tokenizer=None, d_model=512, **kwargs):
+    """Strictly linear frozen-representation head for scalar RT regression."""
+    return nn.Linear(d_model, 1)

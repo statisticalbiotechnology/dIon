@@ -1,0 +1,30 @@
+# Matched legacy-input comparison for scripts/evaluate_end_aa_probe.py.
+# This intentionally feeds raw precursor m/z through the mass encoder and is
+# not the training-matched default for DINO/DINOv2 checkpoints.
+end_aa_pred:
+  mass_input: precursor_mz
+
+  blr: 0.001
+  batch_size: 256
+  epochs: 1000
+  reverse: False
+
+  train_parquet: /path/to/data/probing_datasets/end_aa_pred/train.parquet
+  val_parquet:   /path/to/data/probing_datasets/end_aa_pred/val.parquet
+  test_parquet:  /path/to/data/probing_datasets/end_aa_pred/test.parquet
+
+  use_only_RK: True
+  k: 64
+
+  embedding_quality:
+    enabled: true
+    split: train
+    center: true
+    max_samples: 5000
+    max_samples_self_cluster: 5000
+    seed: 0
+
+  output:
+    write_report: true
+    report_path:
+    print_report: true

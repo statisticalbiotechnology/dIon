@@ -1,0 +1,58 @@
+# KitchenSink V3 de novo transfer using the hybrid DINO encoder.
+# This intentionally differs from the Pairwise scratch recipe: the encoder sees
+# its pretrained 200-peak, basepeak-scaled representation plus precursor inputs.
+task: denovo
+dataset_name: configurable_lance
+tokenizer:
+  source: numeric_mass_delta_manifest
+  manifest: configs/tokenizers/pa11.json
+  special_tokens:
+    pad_token: X
+    bos_token: <EOS>
+    eos_token: <EOS>
+    add_unk_token: false
+top_peaks: 200
+pep_length:
+- 0
+- 100
+charge:
+- 0
+- 10
+buffer_size: 10000
+label_name: seq
+precursor_mz_name: precursor_mz
+precursor_mass_name: false
+train_lance: train.lance
+val_lance: val.lance
+test_lance: test.lance
+extra_val_sets:
+  highcharge_v3_val: /path/to/data/highcharge_v3_combined_20260730_splits_seed42/val.lance
+  charge_ge5_val: /path/to/data/highcharge_v3_combined_20260730_splits_seed42/charge_ge5_val.lance
+  plasma_val: /path/to/data/highcharge_v3_combined_20260730_splits_seed42/plasma_val.lance
+  legacy_v3_val: /path/to/data/highcharge_v3_splits_seed42/val.lance
+denovo_tf:
+  # Preserve the hybrid checkpoint's trained encoder interface.
+  encoder_precursor_conditioning: conditioned
+  gradient_clip_val: null
+  batch_size: 32
+  decoder_dropout: 0.25
+  max_length: 100
+  reverse: true
+  precursor_mass_tol: 50
+  isotope_error_range:
+  - 0
+  - 1
+  min_peptide_len: 6
+  n_beams: 1
+  top_match: 1
+  calculate_precision: true
+  train_label_smoothing: 0.0
+  learning_rate: 0.0002
+  weight_decay: 0.0
+  warmup_steps: 6250
+  cosine_period_steps: 149200
+  epochs: 80
+metadata_columns:
+- peak_file
+- scan_id
+- title

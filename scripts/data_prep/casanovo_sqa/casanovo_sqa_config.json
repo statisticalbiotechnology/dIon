@@ -1,0 +1,69 @@
+{
+  "name": "casanovo_foundation_sqa",
+  "version": 1,
+  "selection_seed": 0,
+  "download_protocol": "ftp",
+  "paper_reference": {
+    "sage_version": "0.14.6",
+    "selection_note": "The paper lists 19 explicit MSV accessions despite stating 20 runs; this benchmark uses the explicit 19.",
+    "raw_selection_note": "Because the paper does not identify the selected RAW within each PXD, one RAW is selected uniformly from sorted .raw candidates per PXD using selection_seed."
+  },
+  "msv_pxd_split_mapping": {
+    "train": {
+      "MSV000080254": "PXD000533",
+      "MSV000080255": "PXD000529",
+      "MSV000081563": "PXD004452",
+      "MSV000081607": "PXD000900",
+      "MSV000081649": "PXD006833",
+      "MSV000083508": "PXD010154",
+      "MSV000083961": "PXD000449",
+      "MSV000083966": "PXD000443",
+      "MSV000083967": "PXD000447"
+    },
+    "val": {
+      "MSV000083978": "PXD010093",
+      "MSV000083983": "PXD004092",
+      "MSV000086369": "PXD014058",
+      "MSV000086385": "PXD014083",
+      "MSV000086389": "PXD006798"
+    },
+    "test": {
+      "MSV000086439": "PXD014300",
+      "MSV000086448": "PXD010142",
+      "MSV000086491": "PXD009737",
+      "MSV000088236": "PXD019909",
+      "MSV000088405": "PXD020483"
+    }
+  },
+  "selection_policy": {
+    "candidate_filter": "all PRIDE files whose fileName ends with .raw, or .raw.zip only when no direct .raw exists; sorted lexicographically",
+    "selection": "one candidate per PXD, selected with a seeded uniform random generator",
+    "trypsin_only": false,
+    "documented_run_count": 20,
+    "explicit_msv_count": 19,
+    "run_count_note": "The paper states 20 runs but explicitly lists 19 MSV accessions; no twentieth run is inferred."
+  },
+  "paths": {
+    "pridepy": "pridepy",
+    "converter": "/path/to/ThermoRawFileParser",
+    "sage": "sage",
+    "sage_config": "scripts/data_prep/casanovo_sqa/sage_default_params.json",
+    "fasta": "/path/to/UP000005640_9606.fasta"
+  },
+  "conversion": {
+    "parser": "pyteomics.mzml.iterative",
+    "format": 1,
+    "metadata": 2,
+    "logging": 2,
+    "fallback_on_error": true,
+    "fallback_policy": "on converter failure, try remaining candidates sorted by file size then filename",
+    "retain_raw_after_successful_conversion": false,
+    "output_ms_levels": "all"
+  },
+  "search": {
+    "joint_search": true,
+    "checksum_policy": "verify PRIDE checksum when it is a recognized MD5, SHA-1, or SHA-256 digest",
+    "label_rule": "positive iff a target Sage PSM has peptide_q < 0.01; all other spectra are negative",
+    "disable_telemetry": true
+  }
+}

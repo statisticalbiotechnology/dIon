@@ -1,0 +1,114 @@
+# Compact model-selection suite. Detailed per-species reports remain offline.
+# One probe per dIon refinement epoch; paired with an epoch checkpoint.
+online_probe_every_n_steps: 2
+end_aa_pred:
+  online_precursor_conditioning_modes: [conditioned, "null"]
+  mass_input: precursor_mass
+  blr: 0.001
+  batch_size: 256
+  epochs: 1000
+  reverse: false
+  train_parquet: /path/to/data/probing_datasets/end_aa_pred/train.parquet
+  val_parquet: /path/to/data/probing_datasets/end_aa_pred/val.parquet
+  test_parquet: /path/to/data/probing_datasets/end_aa_pred/test.parquet
+  use_only_RK: true
+  k: 64
+  embedding_quality: {enabled: true, split: train, center: true, max_samples: 5000, max_samples_self_cluster: 5000, seed: 0}
+  output: {write_report: true, report_path:, print_report: true}
+
+embedding_evaluation:
+  online_precursor_conditioning_modes: [conditioned, "null"]
+  online: {enabled: true, on_fit_start: false, every_n_steps: 2}
+  evaluations:
+    - name: 9spec_v2_val_cb
+      dataset: {parquet_path: /path/to/data/probing_datasets/ninespecies_v2_paper_validation/retrieval.parquet, peptide_id_column: peptide_id, partition_column: species}
+      selection: {seed: 20260817, max_peptides_per_partition: 100, max_spectra_per_peptide: 10}
+      extraction: {batch_size: 256, num_workers: 0, pin_memory: true, show_progress: false}
+      metrics_device: model
+      retrieval: {enabled: true, metric: cosine, ks: [1, 5, 10], query_seed: 20260817, query_batch_size: 128, show_progress: false}
+      mass_controlled_retrieval: {enabled: false, ppm_tolerance: 10.0}
+      cross_charge_retrieval: {enabled: false, neutral_mass_ppm_tolerance: 10.0}
+      compactness: {enabled: true, seed: 20260817, max_between_samples: 1000, show_progress: false, silhouette: {enabled: false}}
+    - name: bact_val_cb
+      dataset: {parquet_path: /path/to/data/probing_datasets/bacterial_paper_benchmarks/validation/retrieval.parquet, peptide_id_column: peptide_id, partition_column: species}
+      selection: {seed: 20260817, max_peptides_per_partition: 3000, max_spectra_per_peptide: 10}
+      extraction: {batch_size: 256, num_workers: 0, pin_memory: true, show_progress: false}
+      metrics_device: model
+      retrieval: {enabled: true, metric: cosine, ks: [1, 5, 10], query_seed: 20260817, query_batch_size: 128, show_progress: false}
+      mass_controlled_retrieval: {enabled: false, ppm_tolerance: 10.0}
+      cross_charge_retrieval: {enabled: false, neutral_mass_ppm_tolerance: 10.0}
+      compactness: {enabled: true, seed: 20260817, max_between_samples: 1000, show_progress: false, silhouette: {enabled: false}}
+    - name: kingdoms_val_cb
+      dataset: {parquet_path: /path/to/data/probing_datasets/kingdoms_paper_benchmarks/validation/retrieval.parquet, peptide_id_column: peptide_id, partition_column: species}
+      selection: {seed: 20260817, max_peptides_per_partition: 100, max_spectra_per_peptide: 10}
+      extraction: {batch_size: 256, num_workers: 0, pin_memory: true, show_progress: false}
+      metrics_device: model
+      retrieval: {enabled: true, metric: cosine, ks: [1, 5, 10], query_seed: 20260817, query_batch_size: 128, show_progress: false}
+      mass_controlled_retrieval: {enabled: false, ppm_tolerance: 10.0}
+      cross_charge_retrieval: {enabled: false, neutral_mass_ppm_tolerance: 10.0}
+      compactness: {enabled: true, seed: 20260817, max_between_samples: 1000, show_progress: false, silhouette: {enabled: false}}
+
+pair_discrimination_evaluation:
+  online_precursor_conditioning_modes: [conditioned, "null"]
+  online: {enabled: true, on_fit_start: false, every_n_steps: 2}
+  evaluations:
+    - name: 9spec_v2_val_cb
+      dataset: {spectra_path: /path/to/data/probing_datasets/ninespecies_v2_paper_validation/pair_discrimination/spectra.parquet, pairs_path: /path/to/data/probing_datasets/ninespecies_v2_paper_validation/pair_discrimination/pairs.parquet, manifest_path: /path/to/data/probing_datasets/ninespecies_v2_paper_validation/pair_discrimination/manifest.json}
+      selection: {seed: 20260817, max_pairs_per_partition_per_label: 250}
+      extraction: {batch_size: 256, num_workers: 0, pin_memory: true, show_progress: false}
+      metrics_device: model
+      pair_metrics: {metric: cosine, balanced_pair_fdr_levels: [0.01, 0.05, 0.10], purity_coverage_levels: [0.01, 0.05, 0.10, 0.25, 0.50, 0.75, 1.0]}
+    - name: bact_val_cb
+      dataset: {spectra_path: /path/to/data/probing_datasets/bacterial_paper_benchmarks/validation/pair_discrimination/spectra.parquet, pairs_path: /path/to/data/probing_datasets/bacterial_paper_benchmarks/validation/pair_discrimination/pairs.parquet, manifest_path: /path/to/data/probing_datasets/bacterial_paper_benchmarks/validation/pair_discrimination/manifest.json}
+      selection: {seed: 20260817, max_pairs_per_partition_per_label: 1000}
+      extraction: {batch_size: 256, num_workers: 0, pin_memory: true, show_progress: false}
+      metrics_device: model
+      pair_metrics: {metric: cosine, balanced_pair_fdr_levels: [0.01, 0.05, 0.10], purity_coverage_levels: [0.01, 0.05, 0.10, 0.25, 0.50, 0.75, 1.0]}
+    - name: kingdoms_val_cb
+      dataset: {spectra_path: /path/to/data/probing_datasets/kingdoms_paper_benchmarks/validation/pair_discrimination/spectra.parquet, pairs_path: /path/to/data/probing_datasets/kingdoms_paper_benchmarks/validation/pair_discrimination/pairs.parquet, manifest_path: /path/to/data/probing_datasets/kingdoms_paper_benchmarks/validation/pair_discrimination/manifest.json}
+      selection: {seed: 20260817, max_pairs_per_partition_per_label: 75}
+      extraction: {batch_size: 256, num_workers: 0, pin_memory: true, show_progress: false}
+      metrics_device: model
+      pair_metrics: {metric: cosine, balanced_pair_fdr_levels: [0.01, 0.05, 0.10], purity_coverage_levels: [0.01, 0.05, 0.10, 0.25, 0.50, 0.75, 1.0]}
+
+
+# Dense representation monitor. This is deliberately conditioned-only: the
+# current hybrid objective uses real precursor conditioning for its clean dense
+# views, while NULL is applied only to the ordinary student local DINO branch.
+dense_denovo_probe:
+  online_precursor_conditioning_modes: [conditioned]
+  dataset:
+    train_lance: /path/to/data/denovo_mskb_v5_dense_probe_16aa_short_v2/train.lance
+    val_lance: /path/to/data/denovo_mskb_v5_dense_probe_16aa_short_v2/val.lance
+    test_lance: /path/to/data/denovo_mskb_v5_dense_probe_16aa_short_v2/test.lance
+    label_name: seq
+    precursor_mz_name: precursor_mz
+    precursor_mass_name: false
+  vocab: ADEFGIKLNPQRSTVY
+  max_peptide_length: 10
+  seed: 1337
+  extraction:
+    batch_size: 64
+    num_workers: 0
+    pin_memory: true
+  cache_dtype: float16
+  decoder:
+    n_head: 2
+    dim_feedforward: 128
+    n_layers: 2
+    dropout: 0.0
+  decoding:
+    n_beams: 1
+    top_match: 1
+    precursor_mass_tol: 50
+    isotope_error_range: [0, 1]
+    min_peptide_len: 6
+  training:
+    batch_size: 32
+    learning_rate: 3.0e-4
+    weight_decay: 0.0
+    epochs: 4
+  output:
+    write_report: true
+    report_path:
+    print_report: true

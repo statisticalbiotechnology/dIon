@@ -1,0 +1,166 @@
+{
+  "schema_version": 1,
+  "status": "frozen",
+  "selection_basis": "Fixed non-pretrained controls selected from complete validation only; no locked-test metrics were used.",
+  "representation": {
+    "models": [
+      {
+        "model_id": "random_hybrid",
+        "conditionings": [
+          "conditioned",
+          "null"
+        ],
+        "corpora": [
+          "ninespecies_v2",
+          "bacterial",
+          "kingdoms"
+        ]
+      },
+      {
+        "model_id": "metric_scratch_10pct_val_loss",
+        "conditionings": [
+          "conditioned"
+        ],
+        "corpora": [
+          "ninespecies_v2",
+          "bacterial",
+          "kingdoms"
+        ]
+      }
+    ]
+  },
+  "downstream": [
+    {
+      "task": "chimericity",
+      "model_label": "scratch_conditioned_finetune",
+      "master_config": "configs/master_chimericity_hye_random.yaml",
+      "downstream_config": "configs/downstream/chimericity_hye.yaml",
+      "downstream_checkpoint": "/path/to/checkpoints/chimericity/chimericity_scratch_conditioned_finetune_17499902_0_14_29_24_792631__10_09_26/epoch=4-val_auc=0.74.ckpt",
+      "freeze_encoder": false,
+      "precursor_conditioning": "conditioned",
+      "decoder_model": "sqa_mlp_head",
+      "wandb_project": "ms2-chimericity"
+    },
+    {
+      "task": "chimericity",
+      "model_label": "binned1024_precursor_metadata_frozen",
+      "master_config": "configs/master_chimericity_hye_binned.yaml",
+      "downstream_config": "configs/downstream/chimericity_hye.yaml",
+      "downstream_checkpoint": "/path/to/checkpoints/chimericity/chimericity_binned1024_precursor_metadata_frozen_17499902_5_14_29_34_996296__10_09_26/epoch=9-val_auc=0.73.ckpt",
+      "freeze_encoder": true,
+      "precursor_conditioning": "conditioned",
+      "decoder_model": "sqa_mlp_head",
+      "wandb_project": "ms2-chimericity"
+    },
+    {
+      "task": "chimericity",
+      "model_label": "binned1024_spectrum_only_frozen",
+      "master_config": "configs/master_chimericity_hye_binned.yaml",
+      "downstream_config": "configs/downstream/chimericity_hye.yaml",
+      "downstream_checkpoint": "/path/to/checkpoints/chimericity/chimericity_binned1024_spectrum_only_frozen_17499902_6_14_29_32_104851__10_09_26/epoch=9-val_auc=0.73.ckpt",
+      "freeze_encoder": true,
+      "precursor_conditioning": "not_used",
+      "decoder_model": "sqa_mlp_head",
+      "wandb_project": "ms2-chimericity"
+    },
+    {
+      "task": "oxidized_met",
+      "model_label": "scratch_conditioned_finetune",
+      "master_config": "configs/master_oxidized_met_random.yaml",
+      "downstream_config": "configs/downstream/oxidized_met.yaml",
+      "downstream_checkpoint": "/path/to/checkpoints/oxidized_met/oxidized_met_scratch_conditioned_finetune_17499903_0_14_29_31_137961__10_09_26/epoch=2-val_auc=0.68.ckpt",
+      "freeze_encoder": false,
+      "precursor_conditioning": "conditioned",
+      "decoder_model": "sqa_mlp_head",
+      "wandb_project": "ms2-oxidized-met"
+    },
+    {
+      "task": "oxidized_met",
+      "model_label": "binned1024_precursor_metadata_frozen",
+      "master_config": "configs/master_oxidized_met_binned.yaml",
+      "downstream_config": "configs/downstream/oxidized_met.yaml",
+      "downstream_checkpoint": "/path/to/checkpoints/oxidized_met/oxidized_met_binned1024_precursor_metadata_frozen_17499903_5_14_29_31_726308__10_09_26/epoch=2-val_auc=0.56.ckpt",
+      "freeze_encoder": true,
+      "precursor_conditioning": "conditioned",
+      "decoder_model": "sqa_mlp_head",
+      "wandb_project": "ms2-oxidized-met"
+    },
+    {
+      "task": "oxidized_met",
+      "model_label": "binned1024_spectrum_only_frozen",
+      "master_config": "configs/master_oxidized_met_binned.yaml",
+      "downstream_config": "configs/downstream/oxidized_met.yaml",
+      "downstream_checkpoint": "/path/to/checkpoints/oxidized_met/oxidized_met_binned1024_spectrum_only_frozen_17499903_6_14_29_32_188580__10_09_26/epoch=2-val_auc=0.56.ckpt",
+      "freeze_encoder": true,
+      "precursor_conditioning": "not_used",
+      "decoder_model": "sqa_mlp_head",
+      "wandb_project": "ms2-oxidized-met"
+    },
+    {
+      "task": "retention_time",
+      "model_label": "random_ordinal_frozen",
+      "master_config": "configs/master_retention_time_random.yaml",
+      "downstream_config": "configs/downstream/retention_time_probe.yaml",
+      "downstream_checkpoint": "/path/to/checkpoints/retention_time/retention_time_random_ordinal_frozen_17499916_0_14_29_54_347954__10_09_26/epoch=15-retention_time_val_mae=0.15.ckpt",
+      "freeze_encoder": true,
+      "precursor_conditioning": "conditioned",
+      "decoder_model": "linear_ordinal_head",
+      "wandb_project": "ms2-retention-time"
+    },
+    {
+      "task": "retention_time",
+      "model_label": "random_regression_frozen",
+      "master_config": "configs/master_retention_time_random.yaml",
+      "downstream_config": "configs/downstream/retention_time_regression_probe.yaml",
+      "downstream_checkpoint": "/path/to/checkpoints/retention_time/retention_time_random_regression_frozen_17499916_1_14_29_53_547878__10_09_26/epoch=7-retention_time_val_mae=0.11.ckpt",
+      "freeze_encoder": true,
+      "precursor_conditioning": "conditioned",
+      "decoder_model": "linear_regression_head",
+      "wandb_project": "ms2-retention-time"
+    },
+    {
+      "task": "retention_time",
+      "model_label": "binned1024_precursor_metadata_ordinal_frozen",
+      "master_config": "configs/master_retention_time_binned.yaml",
+      "downstream_config": "configs/downstream/retention_time_probe.yaml",
+      "downstream_checkpoint": "/path/to/checkpoints/retention_time/retention_time_binned1024_precursor_metadata_ordinal_frozen_17499916_6_14_30_05_165147__10_09_26/epoch=18-retention_time_val_mae=0.11.ckpt",
+      "freeze_encoder": true,
+      "precursor_conditioning": "conditioned",
+      "decoder_model": "linear_ordinal_head",
+      "wandb_project": "ms2-retention-time"
+    },
+    {
+      "task": "retention_time",
+      "model_label": "binned1024_precursor_metadata_regression_frozen",
+      "master_config": "configs/master_retention_time_binned.yaml",
+      "downstream_config": "configs/downstream/retention_time_regression_probe.yaml",
+      "downstream_checkpoint": "/path/to/checkpoints/retention_time/retention_time_binned1024_precursor_metadata_regression_frozen_17499916_7_14_30_12_971942__10_09_26/epoch=5-retention_time_val_mae=0.10.ckpt",
+      "freeze_encoder": true,
+      "precursor_conditioning": "conditioned",
+      "decoder_model": "linear_regression_head",
+      "wandb_project": "ms2-retention-time"
+    },
+    {
+      "task": "retention_time",
+      "model_label": "binned1024_spectrum_only_ordinal_frozen",
+      "master_config": "configs/master_retention_time_binned.yaml",
+      "downstream_config": "configs/downstream/retention_time_probe.yaml",
+      "downstream_checkpoint": "/path/to/checkpoints/retention_time/retention_time_binned1024_spectrum_only_ordinal_frozen_17499916_8_14_29_54_418853__10_09_26/epoch=18-retention_time_val_mae=0.11.ckpt",
+      "freeze_encoder": true,
+      "precursor_conditioning": "not_used",
+      "decoder_model": "linear_ordinal_head",
+      "wandb_project": "ms2-retention-time"
+    },
+    {
+      "task": "retention_time",
+      "model_label": "binned1024_spectrum_only_regression_frozen",
+      "master_config": "configs/master_retention_time_binned.yaml",
+      "downstream_config": "configs/downstream/retention_time_regression_probe.yaml",
+      "downstream_checkpoint": "/path/to/checkpoints/retention_time/retention_time_binned1024_spectrum_only_regression_frozen_17499916_9_14_29_54_337564__10_09_26/epoch=5-retention_time_val_mae=0.11.ckpt",
+      "freeze_encoder": true,
+      "precursor_conditioning": "not_used",
+      "decoder_model": "linear_regression_head",
+      "wandb_project": "ms2-retention-time"
+    }
+  ]
+}

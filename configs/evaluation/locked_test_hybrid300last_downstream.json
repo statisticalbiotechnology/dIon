@@ -1,0 +1,202 @@
+{
+  "schema_version": 1,
+  "status": "frozen",
+  "selection_basis": "Hybrid-300-last downstream checkpoints selected by their complete validation monitors before inspecting held-out test metrics. Both precursor-conditioned and null variants are retained; retention-time includes both prespecified frozen readout heads.",
+  "representation": {
+    "models": []
+  },
+  "downstream": [
+    {
+      "task": "sqa",
+      "model_label": "hybrid300last_conditioned_finetune",
+      "master_config": "configs/master_sqa_hybrid_casanovo_19pxd_balanced_charge1_10.yaml",
+      "downstream_config": "configs/downstream/sqa_casanovo_19pxd_finetune.yaml",
+      "downstream_checkpoint": "/path/to/checkpoints/sqa/sqa_hybrid300last_conditioned_finetune_17506102_2_01_21_20_413822__12_09_26/epoch=2-val_auc=0.89.ckpt",
+      "freeze_encoder": false,
+      "precursor_conditioning": "conditioned",
+      "decoder_model": "sqa_mlp_head",
+      "wandb_project": "ms2-sqa",
+      "encoder_checkpoint": "/path/to/checkpoints/important/DINO/bacteria/dinov2_hybrid_distractor_null_local_300epochs_maxpeaks200_bs128_64gpu_cluster_b/last.ckpt"
+    },
+    {
+      "task": "sqa",
+      "model_label": "hybrid300last_conditioned_frozen",
+      "master_config": "configs/master_sqa_hybrid_casanovo_19pxd_balanced_charge1_10.yaml",
+      "downstream_config": "configs/downstream/sqa_casanovo_19pxd_frozen.yaml",
+      "downstream_checkpoint": "/path/to/checkpoints/sqa/sqa_hybrid300last_conditioned_frozen_17506102_0_01_12_21_018437__12_09_26/epoch=3-val_auc=0.83.ckpt",
+      "freeze_encoder": true,
+      "precursor_conditioning": "conditioned",
+      "decoder_model": "sqa_mlp_head",
+      "wandb_project": "ms2-sqa",
+      "encoder_checkpoint": "/path/to/checkpoints/important/DINO/bacteria/dinov2_hybrid_distractor_null_local_300epochs_maxpeaks200_bs128_64gpu_cluster_b/last.ckpt"
+    },
+    {
+      "task": "sqa",
+      "model_label": "hybrid300last_null_finetune",
+      "master_config": "configs/master_sqa_hybrid_casanovo_19pxd_balanced_charge1_10_null.yaml",
+      "downstream_config": "configs/downstream/sqa_casanovo_19pxd_finetune.yaml",
+      "downstream_checkpoint": "/path/to/checkpoints/sqa/sqa_hybrid300last_null_finetune_17506102_3_01_21_49_603974__12_09_26/epoch=2-val_auc=0.87.ckpt",
+      "freeze_encoder": false,
+      "precursor_conditioning": "null",
+      "decoder_model": "sqa_mlp_head",
+      "wandb_project": "ms2-sqa",
+      "encoder_checkpoint": "/path/to/checkpoints/important/DINO/bacteria/dinov2_hybrid_distractor_null_local_300epochs_maxpeaks200_bs128_64gpu_cluster_b/last.ckpt"
+    },
+    {
+      "task": "sqa",
+      "model_label": "hybrid300last_null_frozen",
+      "master_config": "configs/master_sqa_hybrid_casanovo_19pxd_balanced_charge1_10_null.yaml",
+      "downstream_config": "configs/downstream/sqa_casanovo_19pxd_frozen.yaml",
+      "downstream_checkpoint": "/path/to/checkpoints/sqa/sqa_hybrid300last_null_frozen_17506102_1_01_19_56_342886__12_09_26/epoch=1-val_auc=0.83.ckpt",
+      "freeze_encoder": true,
+      "precursor_conditioning": "null",
+      "decoder_model": "sqa_mlp_head",
+      "wandb_project": "ms2-sqa",
+      "encoder_checkpoint": "/path/to/checkpoints/important/DINO/bacteria/dinov2_hybrid_distractor_null_local_300epochs_maxpeaks200_bs128_64gpu_cluster_b/last.ckpt"
+    },
+    {
+      "task": "chimericity",
+      "model_label": "hybrid300last_conditioned_finetune",
+      "master_config": "configs/master_chimericity_hye.yaml",
+      "downstream_config": "configs/downstream/chimericity_hye.yaml",
+      "downstream_checkpoint": "/path/to/checkpoints/chimericity/chimericity_hybrid300last_conditioned_finetune_17506140_2_05_14_06_275652__12_09_26/epoch=24-val_auc=0.80.ckpt",
+      "freeze_encoder": false,
+      "precursor_conditioning": "conditioned",
+      "decoder_model": "sqa_mlp_head",
+      "wandb_project": "ms2-chimericity",
+      "encoder_checkpoint": "/path/to/checkpoints/important/DINO/bacteria/dinov2_hybrid_distractor_null_local_300epochs_maxpeaks200_bs128_64gpu_cluster_b/last.ckpt"
+    },
+    {
+      "task": "chimericity",
+      "model_label": "hybrid300last_conditioned_frozen",
+      "master_config": "configs/master_chimericity_hye.yaml",
+      "downstream_config": "configs/downstream/chimericity_hye.yaml",
+      "downstream_checkpoint": "/path/to/checkpoints/chimericity/chimericity_hybrid300last_conditioned_frozen_17506103_0_01_50_06_087480__12_09_26/epoch=4-val_auc=0.70.ckpt",
+      "freeze_encoder": true,
+      "precursor_conditioning": "conditioned",
+      "decoder_model": "sqa_mlp_head",
+      "wandb_project": "ms2-chimericity",
+      "encoder_checkpoint": "/path/to/checkpoints/important/DINO/bacteria/dinov2_hybrid_distractor_null_local_300epochs_maxpeaks200_bs128_64gpu_cluster_b/last.ckpt"
+    },
+    {
+      "task": "chimericity",
+      "model_label": "hybrid300last_null_finetune",
+      "master_config": "configs/master_chimericity_hye.yaml",
+      "downstream_config": "configs/downstream/chimericity_hye.yaml",
+      "downstream_checkpoint": "/path/to/checkpoints/chimericity/chimericity_hybrid300last_null_finetune_17506140_3_05_20_45_114560__12_09_26/epoch=29-val_auc=0.80.ckpt",
+      "freeze_encoder": false,
+      "precursor_conditioning": "null",
+      "decoder_model": "sqa_mlp_head",
+      "wandb_project": "ms2-chimericity",
+      "encoder_checkpoint": "/path/to/checkpoints/important/DINO/bacteria/dinov2_hybrid_distractor_null_local_300epochs_maxpeaks200_bs128_64gpu_cluster_b/last.ckpt"
+    },
+    {
+      "task": "chimericity",
+      "model_label": "hybrid300last_null_frozen",
+      "master_config": "configs/master_chimericity_hye.yaml",
+      "downstream_config": "configs/downstream/chimericity_hye.yaml",
+      "downstream_checkpoint": "/path/to/checkpoints/chimericity/chimericity_hybrid300last_null_frozen_17506103_1_02_04_45_890645__12_09_26/epoch=4-val_auc=0.73.ckpt",
+      "freeze_encoder": true,
+      "precursor_conditioning": "null",
+      "decoder_model": "sqa_mlp_head",
+      "wandb_project": "ms2-chimericity",
+      "encoder_checkpoint": "/path/to/checkpoints/important/DINO/bacteria/dinov2_hybrid_distractor_null_local_300epochs_maxpeaks200_bs128_64gpu_cluster_b/last.ckpt"
+    },
+    {
+      "task": "oxidized_met",
+      "model_label": "hybrid300last_conditioned_finetune",
+      "master_config": "configs/master_oxidized_met.yaml",
+      "downstream_config": "configs/downstream/oxidized_met.yaml",
+      "downstream_checkpoint": "/path/to/checkpoints/oxidized_met/oxidized_met_hybrid300last_conditioned_finetune_17506140_6_05_33_48_682041__12_09_26/epoch=2-val_auc=0.85.ckpt",
+      "freeze_encoder": false,
+      "precursor_conditioning": "conditioned",
+      "decoder_model": "sqa_mlp_head",
+      "wandb_project": "ms2-oxidized-met",
+      "encoder_checkpoint": "/path/to/checkpoints/important/DINO/bacteria/dinov2_hybrid_distractor_null_local_300epochs_maxpeaks200_bs128_64gpu_cluster_b/last.ckpt"
+    },
+    {
+      "task": "oxidized_met",
+      "model_label": "hybrid300last_conditioned_frozen",
+      "master_config": "configs/master_oxidized_met.yaml",
+      "downstream_config": "configs/downstream/oxidized_met.yaml",
+      "downstream_checkpoint": "/path/to/checkpoints/oxidized_met/oxidized_met_hybrid300last_conditioned_frozen_17506140_4_05_28_46_167299__12_09_26/epoch=2-val_auc=0.70.ckpt",
+      "freeze_encoder": true,
+      "precursor_conditioning": "conditioned",
+      "decoder_model": "sqa_mlp_head",
+      "wandb_project": "ms2-oxidized-met",
+      "encoder_checkpoint": "/path/to/checkpoints/important/DINO/bacteria/dinov2_hybrid_distractor_null_local_300epochs_maxpeaks200_bs128_64gpu_cluster_b/last.ckpt"
+    },
+    {
+      "task": "oxidized_met",
+      "model_label": "hybrid300last_null_finetune",
+      "master_config": "configs/master_oxidized_met.yaml",
+      "downstream_config": "configs/downstream/oxidized_met.yaml",
+      "downstream_checkpoint": "/path/to/checkpoints/oxidized_met/oxidized_met_hybrid300last_null_finetune_17506140_7_05_38_35_674045__12_09_26/epoch=2-val_auc=0.83.ckpt",
+      "freeze_encoder": false,
+      "precursor_conditioning": "null",
+      "decoder_model": "sqa_mlp_head",
+      "wandb_project": "ms2-oxidized-met",
+      "encoder_checkpoint": "/path/to/checkpoints/important/DINO/bacteria/dinov2_hybrid_distractor_null_local_300epochs_maxpeaks200_bs128_64gpu_cluster_b/last.ckpt"
+    },
+    {
+      "task": "oxidized_met",
+      "model_label": "hybrid300last_null_frozen",
+      "master_config": "configs/master_oxidized_met.yaml",
+      "downstream_config": "configs/downstream/oxidized_met.yaml",
+      "downstream_checkpoint": "/path/to/checkpoints/oxidized_met/oxidized_met_hybrid300last_null_frozen_17506140_5_05_28_42_923894__12_09_26/epoch=2-val_auc=0.70.ckpt",
+      "freeze_encoder": true,
+      "precursor_conditioning": "null",
+      "decoder_model": "sqa_mlp_head",
+      "wandb_project": "ms2-oxidized-met",
+      "encoder_checkpoint": "/path/to/checkpoints/important/DINO/bacteria/dinov2_hybrid_distractor_null_local_300epochs_maxpeaks200_bs128_64gpu_cluster_b/last.ckpt"
+    },
+    {
+      "task": "retention_time",
+      "model_label": "hybrid300last_conditioned_ordinal_frozen",
+      "master_config": "configs/master_retention_time_probe.yaml",
+      "downstream_config": "configs/downstream/retention_time_probe.yaml",
+      "downstream_checkpoint": "/path/to/checkpoints/retention_time/retention_time_hybrid300last_conditioned_ordinal_frozen_17506141_0_05_38_23_291690__12_09_26/epoch=12-retention_time_val_mae=0.10.ckpt",
+      "freeze_encoder": true,
+      "precursor_conditioning": "conditioned",
+      "decoder_model": "linear_ordinal_head",
+      "wandb_project": "ms2-retention-time",
+      "encoder_checkpoint": "/path/to/checkpoints/important/DINO/bacteria/dinov2_hybrid_distractor_null_local_300epochs_maxpeaks200_bs128_64gpu_cluster_b/last.ckpt"
+    },
+    {
+      "task": "retention_time",
+      "model_label": "hybrid300last_conditioned_regression_frozen",
+      "master_config": "configs/master_retention_time_regression_probe.yaml",
+      "downstream_config": "configs/downstream/retention_time_regression_probe.yaml",
+      "downstream_checkpoint": "/path/to/checkpoints/retention_time/retention_time_hybrid300last_conditioned_regression_frozen_17506141_1_05_51_56_146211__12_09_26/epoch=2-retention_time_val_mae=0.11.ckpt",
+      "freeze_encoder": true,
+      "precursor_conditioning": "conditioned",
+      "decoder_model": "linear_regression_head",
+      "wandb_project": "ms2-retention-time",
+      "encoder_checkpoint": "/path/to/checkpoints/important/DINO/bacteria/dinov2_hybrid_distractor_null_local_300epochs_maxpeaks200_bs128_64gpu_cluster_b/last.ckpt"
+    },
+    {
+      "task": "retention_time",
+      "model_label": "hybrid300last_null_ordinal_frozen",
+      "master_config": "configs/master_retention_time_probe.yaml",
+      "downstream_config": "configs/downstream/retention_time_probe.yaml",
+      "downstream_checkpoint": "/path/to/checkpoints/retention_time/retention_time_hybrid300last_null_ordinal_frozen_17506141_2_05_56_02_261446__12_09_26/epoch=12-retention_time_val_mae=0.10.ckpt",
+      "freeze_encoder": true,
+      "precursor_conditioning": "null",
+      "decoder_model": "linear_ordinal_head",
+      "wandb_project": "ms2-retention-time",
+      "encoder_checkpoint": "/path/to/checkpoints/important/DINO/bacteria/dinov2_hybrid_distractor_null_local_300epochs_maxpeaks200_bs128_64gpu_cluster_b/last.ckpt"
+    },
+    {
+      "task": "retention_time",
+      "model_label": "hybrid300last_null_regression_frozen",
+      "master_config": "configs/master_retention_time_regression_probe.yaml",
+      "downstream_config": "configs/downstream/retention_time_regression_probe.yaml",
+      "downstream_checkpoint": "/path/to/checkpoints/retention_time/retention_time_hybrid300last_null_regression_frozen_17506141_3_05_56_02_691683__12_09_26/epoch=15-retention_time_val_mae=0.11.ckpt",
+      "freeze_encoder": true,
+      "precursor_conditioning": "null",
+      "decoder_model": "linear_regression_head",
+      "wandb_project": "ms2-retention-time",
+      "encoder_checkpoint": "/path/to/checkpoints/important/DINO/bacteria/dinov2_hybrid_distractor_null_local_300epochs_maxpeaks200_bs128_64gpu_cluster_b/last.ckpt"
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+# Dedicated environment for the official GLEAMS v0.3 external-reference runner.
+#
+# Create this environment, then install the audited clone explicitly:
+#   conda env create -f environments/gleams39.yml
+#   conda activate gleams39
+#   pip install -e /path/to/GLEAMS
+#
+# The clone must be pinned to commit 13ebc74490399b69ca13c9f182d64ad6a09c67c1
+# and must provide the official gleams_82c0124b.hdf5 weights plus the 500
+# reference spectra at the locations resolved by gleams.config.
+name: gleams39
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.9
+  - pip
+  - numpy>=1.19.5,<1.23
+  - scipy=1.7.1
+  - cudatoolkit=11.2
+  - cudnn=8.1
+  - protobuf=3.20
+  - h5py
+  - pandas
+  - pyarrow
+  - scikit-learn
+  - numba
+  - pyteomics
+  - tqdm
+  - pip:
+      - tensorflow==2.7.0
+      - tensorflow-addons==0.15.0
+      - spectrum-utils

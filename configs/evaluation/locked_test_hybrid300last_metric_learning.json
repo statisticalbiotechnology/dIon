@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "status": "frozen",
+  "selection_basis": "Hybrid-300-last initialized full SupCon fine-tunes selected by their fixed validation-loss monitors. This locked-test cohort intentionally contains only the paper-required 1% and 10% full fine-tunes, each evaluated on all three corpora.",
+  "representation": {
+    "models": [
+      {
+        "model_id": "metric_hybrid_300_1pct_val_loss",
+        "conditionings": [
+          "conditioned"
+        ],
+        "corpora": [
+          "ninespecies_v2",
+          "bacterial",
+          "kingdoms"
+        ]
+      },
+      {
+        "model_id": "metric_hybrid_300_10pct_hybrid300last_val_loss",
+        "conditionings": [
+          "conditioned"
+        ],
+        "corpora": [
+          "ninespecies_v2",
+          "bacterial",
+          "kingdoms"
+        ]
+      }
+    ]
+  },
+  "downstream": []
+}

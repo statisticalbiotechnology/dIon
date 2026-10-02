@@ -1,0 +1,61 @@
+# Hybrid-DINO-initialized, precursor-NULL de novo training on KitchenSink V4.
+# All V4 comparisons use the hybrid DINO encoder input representation.
+data_root_dir: /path/to/data/bacteria_PXD010000__PXD010613/annotated_regenerated_v3/
+output_dir: /path/to/checkpoints/checkpoint
+log_dir: /path/to/logs/log
+embedding_dir: /path/to/runs/embeddings_cache
+wandb_project: denovo
+wandb_entity: null
+log_wandb: 1
+num_workers: 4
+matmul_precision: high
+precision: bf16-mixed
+
+save_top_k: 5
+save_last: 1
+every_n_epochs: 1
+remove_ckpt: 0
+
+peak_filter_method: default
+intensity_scaling: basepeak
+min_intensity: 0.0001
+min_mz: 0
+max_mz: 2500
+max_length: 100
+max_peaks: 200
+
+use_mass: 1
+use_charge: 1
+use_energy: 0
+max_charge: 10
+encoder_model: encoder_larger_deeper
+decoder_model: casanovo_decoder
+cls_token: 0
+cross_attend: 1
+
+accum_iter: 1
+batch_size: -1
+scale_lr_by_batchsize: 0
+seed: 0
+accelerator: gpu
+num_devices: 8
+num_nodes: 2
+strategy: ddp
+
+pretrain: 0
+pretraining_task: dion
+pretrain_config: configs/pretrain/dion_hybrid_distractor_null_local_100pct.yaml
+encoder_weights:
+probe_on_fit_start: 0
+probe_every_n_steps: 6000
+
+downstream_task: denovo_tf
+downstream_config: configs/downstream/denovo_kitchensink_v4_dion_hybrid_null.yaml
+downstream_root_dir: /path/to/data/denovo_kitchensink_v4/lance
+downstream_weights:
+limit_train_batches: 1.0
+limit_val_batches: 200
+limit_test_batches: 1.0
+validate_every_n_epochs: 1
+validate_on_end: 0
+test_on_end: 1

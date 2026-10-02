@@ -1,0 +1,26 @@
+pair_discrimination_evaluation:
+  name: bacterial_paper_test_peptide_disjoint_pairs
+  dataset:
+    spectra_path: /path/to/data/probing_datasets/bacterial_paper_benchmarks/test_peptide_disjoint/pair_discrimination/spectra.parquet
+    pairs_path: /path/to/data/probing_datasets/bacterial_paper_benchmarks/test_peptide_disjoint/pair_discrimination/pairs.parquet
+    manifest_path: /path/to/data/probing_datasets/bacterial_paper_benchmarks/test_peptide_disjoint/pair_discrimination/manifest.json
+  selection:
+    seed: 20260817
+    max_pairs_per_partition_per_label:
+  extraction:
+    batch_size: 256
+    num_workers: 2
+    pin_memory: true
+    show_progress: true
+  metrics_device: model
+  pair_metrics:
+    metric: cosine
+    balanced_pair_fdr_levels: [0.01, 0.05, 0.10]
+    purity_coverage_levels: [0.01, 0.05, 0.10, 0.25, 0.50, 0.75, 1.0]
+  output:
+    write_report: true
+    report_tag: bact_test
+    report_path:
+    print_report: true
+  online:
+    enabled: false

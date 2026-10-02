@@ -1,0 +1,45 @@
+embedding_intervention_evaluation:
+  retrieval_config_path: configs/probing_tasks/embedding_evaluation.yaml
+  pair_config_path: configs/probing_tasks/pair_discrimination_evaluation.yaml
+  seed: 20260729
+
+  # Fixed diagnostic subset. Counterfactual tests require 19 complete model
+  # passes (clean plus 6 interventions x 3 seeds), so use this subset for
+  # repeatable model-behavior comparisons. Use the full standalone configs for
+  # final checkpoint reporting.
+  retrieval_overrides:
+    selection:
+      max_peptides_per_partition: 150
+      max_spectra_per_peptide: 5
+    extraction:
+      show_progress: true
+    compactness:
+      enabled: false
+  pair_overrides:
+    selection:
+      max_pairs_per_partition_per_label: 100
+    extraction:
+      show_progress: true
+
+  interventions:
+    - name: none
+      repeats: 1
+    - name: permute_mass_within_species_charge
+      repeats: 3
+    - name: permute_charge_within_species
+      repeats: 3
+    - name: permute_mass_and_charge
+      repeats: 3
+    # Same 10-ppm eligibility, 5-ppm merging, no intensity renormalization,
+    # and 50% distractor count as distractor DINO training. Full spectra are
+    # anchors here, so this is an inference robustness test rather than an
+    # exact random-crop training view.
+    - name: inject_distractor_peaks_50pct
+      repeats: 3
+    - name: permute_peaks_within_batch
+      repeats: 3
+    - name: shuffle_intensities_within_spectrum
+      repeats: 3
+  output:
+    report_path:
+    print_report: true

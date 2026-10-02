@@ -1,0 +1,53 @@
+# Supervised peptide metric learning on deterministic identity-level label budgets.
+# Only train_lance changes between 1/10/100% experiments; validation and all
+# canonical retrieval/pair manifests remain fixed.
+dataset_name: configurable_lance
+label_name: seq
+precursor_mz_name: precursor_mz
+precursor_mass_name: false
+top_peaks: 200
+num_workers: 8
+
+train_lance: /path/to/data/bacteria_PXD010000__PXD010613/annotated_regenerated_v3/metric_learning/bacterial_metric_train_peptides_10pct_seed20260908.lance
+val_lance: /path/to/data/bacteria_PXD010000__PXD010613/annotated_regenerated_v3/val.lance
+# Exhaustive post-fit traversal; this does not affect validation selection.
+test_lance: /path/to/data/bacteria_PXD010000__PXD010613/annotated_regenerated_v3/test.lance
+
+metric_learning:
+  batch_size: 128
+  peptides_per_batch: 64
+  spectra_per_peptide: 2
+  # Static metadata-only hard negatives. These settings never inspect encoder embeddings.
+  hard_negative_sampling:
+    strict_ppm: 10.0
+    relaxed_ppm_windows: [50.0, 250.0, 1000.0, 5000.0, 20000.0]
+    diagnostics_reservoir_size: 100000
+  # Fixed optimizer-step budget across 1/10/100% label budgets. Each rank
+  # receives this many positive-aware batches per epoch.
+  train_batches_per_epoch: 500
+  # Fixed seeded validation draw for checkpointing/early stopping.
+  validation_batches_per_epoch: 100
+  # Test uses a sequential all-row loader; positive-aware batches sample and
+  # are retained only for training and validation SupCon loss.
+  test_full_dataset_pass: true
+  temperature: 0.07
+  metric_embedding_dim: 128
+  # Omitted means D, giving Linear(D, D) -> GELU -> Linear(D, 128).
+  metric_hidden_dim:
+  encoder_precursor_conditioning: conditioned
+
+  head_lr: 3.0e-4
+  encoder_lr: 3.0e-5
+  weight_decay: 0.01
+  anneal_lr: true
+  anneal_per_step: true
+  lr_start: 1.0e-7
+  lr_end: 1.0e-6
+  warmup_duration: 500
+  decay_delay: 0
+  decay_duration: 40000
+  # Logical validation rounds, not full dataset passes.
+  epochs: 80
+  checkpoint_monitor: metric_learning_val_loss_epoch
+  checkpoint_mode: min
+  gradient_clip_val: 1.0

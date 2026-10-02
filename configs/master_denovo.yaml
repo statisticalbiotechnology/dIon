@@ -1,0 +1,72 @@
+# Unified de novo master config
+
+# Default dataset: MassIVE-KB
+# (Switch downstream_config + downstream_root_dir / paths for other datasets)
+
+data_root_dir: /path/to/data/MassIVE_KB/
+# data_root_dir: /path/to/data/9_species_V2/lance_species
+# data_root_dir: /path/to/data/bacteria_PXD010000__PXD010613/no_labels/
+
+output_dir: /path/to/checkpoints/checkpoint
+log_dir: /path/to/project/logs/log
+embedding_dir: /path/to/project/embeddings_cache
+wandb_project: denovo
+wandb_entity: null
+log_wandb: 1
+num_workers: 8
+matmul_precision: high
+precision: 32-true
+
+# Checkpointing
+save_top_k: 5
+save_last: 1
+every_n_epochs: 1
+remove_ckpt: 0
+
+# Peak filtering
+peak_filter_method: default
+
+# Models (dataset-specific notes)
+encoder_model: encoder_pairwise   # mskb: encoder_pairwise | dc_encoder_base | encoder_base_arch
+# encoder_model: encoder_base_arch # ninespecies_v2 baseline
+# encoder_model: dc_encoder_base   # dc runs
+
+decoder_model: casanovo_decoder   # mskb/ninespecies baseline
+# decoder_model: dc_casanovo_decoder  # dc runs
+
+#### Training hyperparameters
+batch_size: 32
+max_peaks: 300
+seed: 0
+
+# Tasks
+pretrain: 0
+encoder_weights:
+pretrain_config: configs/pretrain/dion_noibot_nokoleo_default.yaml
+pretraining_task: dion
+probe_on_fit_start: 0
+probe_every_n_steps: 6000
+trinary_type: "mz"
+mask_ratio: 0.75
+
+# De novo
+# MSKB (default)
+downstream_config: configs/downstream/denovo_mskb.yaml
+# NineSpecies V2 (lance species loader)
+# downstream_config: configs/downstream/denovo_ninespecies_v2.yaml
+# NineSpecies updated
+# downstream_config: configs/downstream/denovo_ninespecies_updated.yaml
+
+downstream_task: denovo_tf
+
+# MSKB root (default)
+downstream_root_dir: /path/to/data/MassIVE_KB/
+# NineSpecies V2
+# downstream_root_dir: /path/to/data/9_species_V2/lance_species
+
+# NineSpecies updated paths
+
+downstream_weights:
+limit_train_batches: 1.0
+limit_val_batches: 200
+validate_every_n_epochs: 1

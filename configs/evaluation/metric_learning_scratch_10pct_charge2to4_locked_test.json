@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "status": "frozen",
+  "selection_basis": "Supplemental charge-2-4 held-out evaluation for the canonical scratch 10% SupCon checkpoint. The checkpoint is the minimum metric_learning_val_loss_epoch checkpoint selected on its fixed seeded 100-batch validation draw; no held-out representation metric was used for selection.",
+  "representation": {
+    "models": [
+      {
+        "model_id": "metric_scratch_10pct_hybrid300last_val_loss",
+        "conditionings": [
+          "conditioned"
+        ],
+        "corpora": [
+          "ninespecies_v2",
+          "bacterial",
+          "kingdoms"
+        ]
+      }
+    ]
+  },
+  "downstream": []
+}

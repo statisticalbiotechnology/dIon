@@ -1,0 +1,117 @@
+dion:
+  dataset_name: bacteria
+  # Data augmentation for DINO global loss and aligned global views for iBOT.
+  selection_mode: "random_batched" # or "window", "random", "random_intensity_weighted", "random_intensity_weighted_batched"
+  rand_window_size: false
+  intensity_alpha: 1.0
+  intensity_eps: 0.01
+  global_crops_scale:
+    - 0.95
+    - 0.95
+  local_crops_scale:
+    - 0.6
+    - 0.6
+  num_global_crops: 2
+  num_local_crops: 2
+
+  # torch.compile experiments. Leave disabled by default: on GH200 this was
+  # slower than eager mode for the current DINOv2 multi-crop shapes.
+  # Fixed crop padding is only applied when compile_model is true, preserving
+  # the default variable-length crop mode.
+  compile_model: false
+  compile_mode: "default"
+  compile_strategy: "student_submodules"
+  compile_backend:
+  compile_fullgraph: false
+  compile_dynamic: false
+  compile_fixed_crop_padding: true
+  fixed_crop_padding_max_peaks: 300
+
+  # Hybrid H4/H26 objective. Teacher global crops remain clean and conditioned
+  # on anchor A. Student globals independently mix equal-sized B subsets while
+  # retaining A's precursor. Student local crops are clean 60% A subsets with
+  # the reserved null precursor (charge=0, mass=0).
+  mix_distractor_enabled: true
+  mix_apply_to: "global_only"
+  mix_distractor_sampling: "per_view"
+  mix_strength_start: 1.0
+  mix_strength_end: 1.0
+  precursor_null_student_crops: "local"
+  dino_student_group_weights:
+    conditional_global: 0.5
+    null_local: 0.5
+  mix_warmup_duration: 0
+  mix_condition_separation_ppm: 10.0
+  mix_neutral_mass_separation_ppm: 10.0
+  mix_merge_ppm: 5.0
+  mix_intensity_normalization: "none"
+
+  # DINO global head hparams. DINOv2's official DINOHead does not freeze
+  # weight_g, so mlp_norm_last_layer stays false here.
+  mlp_out_dim: 16384
+  mlp_use_bn: false
+  mlp_norm_last_layer: false
+  mlp_nlayers: 3
+  mlp_hidden_dim: 2048
+  mlp_bottleneck_dim: 256
+
+  # iBOT dense peak-token head hparams. Defaults mirror the DINO head.
+  ibot_mlp_out_dim: 16384
+  ibot_mlp_use_bn: false
+  ibot_mlp_norm_last_layer: false
+  ibot_mlp_nlayers: 3
+  ibot_mlp_hidden_dim: 2048
+  ibot_mlp_bottleneck_dim: 256
+
+  # DINOv2 objective ablation: keep DINOv2 heads, Sinkhorn,
+  # encoder_ld-matched schedules, and multi-crop wrapper, but disable dense
+  # iBOT supervision, global student masking, and KoLeo. This isolates whether
+  # KoLeo explains the remaining gap after removing iBOT.
+  dino_loss_weight: 1.0
+  ibot_loss_weight: 0.0
+  koleo_loss_weight: 0.0
+  ibot_mask_sample_probability: 0.0
+  ibot_mask_ratio_min_max:
+    - 0.0
+    - 0.0
+
+  # Teacher/student temperatures and target centering. Official DINOv2 exposes
+  # train.centering as either "centering" or "sinkhorn_knopp"; the large
+  # vitl14/vitg14 configs use Sinkhorn-Knopp. Temperature and teacher momentum
+  # follow the successful W&B encoder_larger_deeper run user/dion-pretraining/39lvg1og.
+  # DINOv2 converts warmup_teacher_temp_epochs to a per-step schedule.
+  centering: "sinkhorn_knopp"
+  sinkhorn_iterations: 3
+  warmup_teacher_temp: 0.03
+  teacher_temp: 0.07
+  warmup_teacher_temp_epochs: 10
+  student_temp: 0.1
+  center_momentum: 0.9
+  ibot_warmup_teacher_temp: 0.03
+  ibot_teacher_temp: 0.07
+  ibot_warmup_teacher_temp_epochs: 10
+  ibot_student_temp: 0.1
+  ibot_center_momentum: 0.9
+  teacher_momentum_start: 0.998
+  teacher_momentum_end: 1.0
+  pooling: "crossattend"
+
+  # Training hparams General. The old encoder_larger_deeper run logged
+  # warmup_duration=20000 and decay_duration=75000, but its two-optimizer
+  # scheduler path used trainer.global_step // 2. DINOv2 uses one optimizer, so
+  # double step durations here to match the old logged LR-vs-epoch curve.
+  anneal_lr: 1
+  anneal_per_step: true
+  warmup_duration: 40000
+  lr_start: 0
+  blr: 8.0e-5
+  lr_end: 1.0e-6
+  decay_delay: 0
+  decay_duration: 450000
+  batch_size: 64
+  ref_batch_size: 256
+  weight_decay: 0.04
+  epochs: 300
+  subset: 0
+  num_workers: 2
+  dropout: 0.15

@@ -1,0 +1,42 @@
+# Evaluation-only recipe for fixed NineSpecies V2 head-10k species subsets.
+# The source column named precursor_mass contains observed precursor m/z.
+task: denovo
+dataset_name: configurable_lance
+tokenizer:
+  source: numeric_mass_delta_manifest
+  manifest: configs/tokenizers/pa11.json
+  special_tokens:
+    pad_token: X
+    bos_token: <EOS>
+    eos_token: <EOS>
+    add_unk_token: false
+top_peaks: 200
+pep_length: [0, 100]
+charge: [0, 10]
+label_name: modified_sequence
+precursor_mz_name: precursor_mass
+precursor_mass_name: false
+# Required by the explicit Lance data-module contract; evaluation commands
+# override all three paths with the selected species test.lance.
+train_lance: placeholder.lance
+val_lance: placeholder.lance
+test_lance: placeholder.lance
+denovo_tf:
+  encoder_precursor_conditioning: conditioned
+  batch_size: 100
+  eval_batch_size: 100
+  decoder_dropout: 0.25
+  max_length: 100
+  reverse: true
+  precursor_mass_tol: 50
+  isotope_error_range: [0, 1]
+  min_peptide_len: 6
+  n_beams: 1
+  top_match: 1
+  calculate_precision: true
+  train_label_smoothing: 0.0
+  learning_rate: 0.0001
+  weight_decay: 0.0
+  warmup_steps: 6250
+  cosine_period_steps: 149200
+  epochs: 1

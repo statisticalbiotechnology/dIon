@@ -1,0 +1,50 @@
+Bootstrap: docker
+From: nvcr.io/nvidia/pytorch:26.06-py3
+
+%files
+    /usr/lib64/pkgconfig/libfabric.pc /usr/share/pkgconfig/libfabric.pc
+    /usr/lib64/pkgconfig/libcxi.pc /usr/share/pkgconfig/libcxi.pc
+    /usr/bin/fi_info /usr/bin/fi_info
+    /usr/bin/fi_mon_sampler /usr/bin/fi_mon_sampler
+    /usr/bin/fi_pingpong /usr/bin/fi_pingpong
+    /usr/bin/fi_strerror /usr/bin/fi_strerror
+    /usr/include/rdma /usr/include/
+    /usr/lib64/libfabric.so.1.29.1 /usr/lib64/libfabric.so
+    /usr/lib64/libfabric.so.1.29.1 /usr/lib64/libfabric.so.1
+    /usr/lib64/libfabric.so.1.29.1 /usr/lib64/libfabric.so.1.29.1
+    /usr/include/libcxi /usr/include/libcxi
+    /usr/lib64/libcxi.so.1.6.0 /usr/lib64/libcxi.so
+    /usr/lib64/libcxi.so.1.6.0 /usr/lib64/libcxi.so.1
+    /usr/lib64/libcxi.so.1.6.0 /usr/lib64/libcxi.so.1.6.0
+    /usr/lib64/libjson-c.so.5.0.0 /usr/lib64/libjson-c.so
+    /usr/lib64/libjson-c.so.5.0.0 /usr/lib64/libjson-c.so.5
+    /usr/lib64/libjson-c.so.5.0.0 /usr/lib64/libjson-c.so.5.0.0
+    /usr/lib64/liburing.so.2.12 /usr/lib64/liburing.so
+    /usr/lib64/liburing.so.2.12 /usr/lib64/liburing.so.2
+    /usr/lib64/liburing.so.2.12 /usr/lib64/liburing.so.2.12
+    /usr/lib64/libxpmem.so.0.0.0 /usr/lib64/libxpmem.so
+    /usr/lib64/libxpmem.so.0.0.0 /usr/lib64/libxpmem.so.0
+    /usr/lib64/libxpmem.so.0.0.0 /usr/lib64/libxpmem.so.0.0.0
+    /usr/lib64/libnl-3.so.200.26.0 /usr/lib/aarch64-linux-gnu/libnl-3.so
+    /usr/lib64/libnl-3.so.200.26.0 /usr/lib/aarch64-linux-gnu/libnl-3.so.200
+    /usr/lib64/libnl-3.so.200.26.0 /usr/lib/aarch64-linux-gnu/libnl-3.so.200.26.0
+
+%environment
+    export LIBRARY_PATH=/usr/lib64:${LIBRARY_PATH}
+    export LD_LIBRARY_PATH=/opt/amazon/ofi-nccl/lib:/usr/lib64:${LD_LIBRARY_PATH}
+
+%post
+    set -eu
+    rm -rf /opt/amazon
+    echo /usr/lib64 > /etc/ld.so.conf.d/efa.conf
+    ldconfig
+    export LD_LIBRARY_PATH=/usr/lib64:${LD_LIBRARY_PATH}
+    export LIBRARY_PATH=/usr/lib64:${LIBRARY_PATH}
+    rm -rf /tmp/aws-ofi-nccl
+    git clone --branch v1.20.0 https://github.com/aws/aws-ofi-nccl.git /tmp/aws-ofi-nccl
+    cd /tmp/aws-ofi-nccl
+    ./autogen.sh
+    ./configure --prefix=/opt/amazon/ofi-nccl --with-cuda=/usr/local/cuda --with-mpi=/usr/local/mpi --with-hwloc=/usr/local/mpi
+    make -j"$(nproc)"
+    make install
+    rm -rf /usr/local/cuda/compat/lib /usr/local/cuda/compat/.*checked

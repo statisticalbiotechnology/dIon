@@ -1,0 +1,56 @@
+# Build the referenced static benchmark before running this configuration:
+# python scripts/create_ninespecies_v2_pair_benchmark.py
+# The manifest stores the seed, sampling-code version, source dataset version,
+# source metadata hashes, and hashes of both generated Parquet artifacts.
+
+pair_discrimination_evaluation:
+  name: ninespecies_v2_peptide_ion_pairs
+  dataset:
+    spectra_path: /path/to/data/probing_datasets/ninespecies_v2_peptide_ion_pairs/spectra.parquet
+    pairs_path: /path/to/data/probing_datasets/ninespecies_v2_peptide_ion_pairs/pairs.parquet
+    manifest_path: /path/to/data/probing_datasets/ninespecies_v2_peptide_ion_pairs/manifest.json
+
+  # The static pair table is already 1:1 positive:negative within each
+  # species/protocol. Online selection preserves that ratio deterministically.
+  selection:
+    seed: 0
+    max_pairs_per_partition_per_label:
+  extraction:
+    batch_size: 256
+    num_workers: 2
+    pin_memory: true
+    show_progress: true
+  metrics_device: model
+
+  pair_metrics:
+    # Cosine distance on L2-normalized embeddings. Keep this fixed across all
+    # checkpoint comparisons; Euclidean is also supported for a deliberate
+    # separate benchmark.
+    metric: cosine
+    balanced_pair_fdr_levels: [0.01, 0.05, 0.10]
+    purity_coverage_levels: [0.01, 0.05, 0.10, 0.25, 0.50, 0.75, 1.0]
+
+  # The static corpus includes three 1:1 protocols: all_random (broad
+  # separation), same_charge_random (charge-controlled), and
+  # same_charge_10ppm (precursor-conditioned fragmentation discrimination).
+
+  # Standalone writes one JSON report with per-species, macro, and pooled
+  # results. The curve data remain in that report and are not W&B scalars.
+  output:
+    write_report: true
+    report_path:
+    print_report: true
+
+  # Enable only when a deliberately smaller static benchmark or selected pair
+  # subset is acceptable for in-training monitoring.
+  online:
+    enabled: false
+    on_fit_start: false
+    overrides:
+      selection:
+        max_pairs_per_partition_per_label: 1000
+      extraction:
+        show_progress: false
+      output:
+        write_report: false
+        print_report: false

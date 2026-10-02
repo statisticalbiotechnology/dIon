@@ -1,0 +1,33 @@
+embedding_robustness_evaluation:
+  retrieval_config_path: configs/probing_tasks/embedding_evaluation.yaml
+  pair_config_path: configs/probing_tasks/pair_discrimination_evaluation.yaml
+  seed: 20260729
+
+  # Same deterministic diagnostic subset as the intervention suite. Full-data
+  # retrieval/pair reports remain separate final-evaluation commands.
+  retrieval_overrides:
+    selection:
+      max_peptides_per_partition: 150
+      max_spectra_per_peptide: 5
+    extraction:
+      show_progress: true
+    compactness:
+      enabled: false
+  pair_overrides:
+    selection:
+      max_pairs_per_partition_per_label: 100
+    extraction:
+      show_progress: true
+
+  # Each perturbed query is evaluated against unperturbed gallery embeddings.
+  # The static pair result averages both query/gallery directions per pair.
+  interventions:
+    - name: inject_distractor_peaks_50pct
+      repeats: 3
+    - name: permute_peaks_within_batch
+      repeats: 3
+    - name: shuffle_intensities_within_spectrum
+      repeats: 3
+  output:
+    report_path:
+    print_report: true

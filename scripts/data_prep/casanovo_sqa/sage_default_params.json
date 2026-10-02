@@ -1,0 +1,11 @@
+{
+  "database": {
+    "fasta": ""
+  },
+  "precursor_tol": {
+    "da": [ -500, 100 ]
+  },
+  "fragment_tol": {
+    "ppm": [ -10, 10 ]
+  }
+}

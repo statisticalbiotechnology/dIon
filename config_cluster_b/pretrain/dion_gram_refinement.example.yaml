@@ -1,0 +1,50 @@
+# Copy this block into a NEW DINOv2 refinement config only.
+# It is intentionally disabled: do not activate it until the two checkpoint roles
+# and every phase-specific value below have been selected from dIon experiments.
+#
+# The ordinary hybrid DINO objective, its EMA teacher, crops, optimizer, and
+# schedule remain defined by that new refinement config. Gram is additive.
+
+dion:
+  # Opt-in guard. Existing DINOv2 configs omit this key and retain their exact
+  # existing behavior.
+  gram_enabled: false
+
+  # REQUIRED when enabled: an earlier checkpoint with the desired dense geometry.
+  # This is loaded as a frozen BACKBONE only; heads and DINO centers are ignored.
+  # It must not be the late refinement initialization checkpoint.
+  gram_teacher_checkpoint: ""
+
+  # REQUIRED when enabled. This must agree with the CLI --resume value so the
+  # optimizer/scheduler choice cannot silently change between refinement jobs:
+  #   weights_only -> --resume 0 (deliberate new refinement optimizer)
+  #   resume       -> --resume 1 (preserve optimizer and scheduler state)
+  gram_refinement_checkpoint_mode: ""
+
+  # The first causal experiment is DINO-only. Keep ibot_loss_weight: 0.0 in the
+  # parent refinement config; Gram+iBOT is a distinct future experiment.
+
+  # REQUIRED when enabled. Select from dIon-scale pilot measurements, not DINOv3.
+  # Total objective = existing hybrid DINO objective + this weight * gram_loss.
+  gram_loss_weight: 0.0
+
+  # Relative to the first refinement step, stored in refinement checkpoints.
+  # Zero means the selected weight is active immediately. Do not use an absolute
+  # pretraining-clock epoch value here.
+  gram_warmup_steps: 0
+
+  # "linear" preserves the original implementation; "cosine" gives a smooth
+  # half-cosine 0 -> gram_loss_weight activation.
+  gram_warmup_schedule: "linear"
+
+  # One of the existing clean teacher global crops. The student gets a separate
+  # clean, real-precursor forward pass on this exact crop; no distractor mixing,
+  # masking, or independent peak sampling occurs in the Gram path.
+  gram_clean_crop_index: 0
+
+  # A refresh is an exact copy from the ordinary EMA teacher, not another EMA.
+  # The relative clock begins when refresh is first enabled and persists on resume.
+  gram_teacher_refresh: false
+  gram_teacher_refresh_first_step: 0
+  gram_teacher_refresh_every_n_steps: 0
+  gram_teacher_refresh_max_updates: 0

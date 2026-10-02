@@ -1,0 +1,35 @@
+end_aa_pred:
+  # DINO/DINOv2 pretraining receives the canonical mass derived by pad_peaks:
+  # precursor_mass = precursor_mz * precursor_charge.
+  mass_input: precursor_mass
+
+  # Training hparams
+  blr: 0.001
+  batch_size: 256
+  epochs: 1000
+  reverse: False
+
+  train_parquet: /path/to/data/probing_datasets/end_aa_pred/train.parquet
+  val_parquet:   /path/to/data/probing_datasets/end_aa_pred/val.parquet
+  test_parquet:  /path/to/data/probing_datasets/end_aa_pred/test.parquet
+
+  # whether to drop “other” class entirely
+  use_only_RK: True
+
+  # k for the cosine-kNN probe
+  k: 64
+
+  # Unsupervised global-embedding quality metrics from embed_eval.
+  # Computed once per probing event on cached probe embeddings.
+  embedding_quality:
+    enabled: true
+    split: train
+    center: true
+    max_samples: 5000
+    max_samples_self_cluster: 5000
+    seed: 0
+
+  output:
+    write_report: true
+    report_path:
+    print_report: true

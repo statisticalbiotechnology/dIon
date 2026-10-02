@@ -1,0 +1,17 @@
+precursor_counterfactual_evaluation:
+  # Locked NineSpecies V2 development data for the 100%-B fixed-mixture intervention.
+  # not final held-out reporting.
+  retrieval_config_path: configs/probing_tasks/ninespecies_v2_paper_validation_retrieval.yaml
+  seed: 20260818
+  max_pairs_per_partition: 500
+  extraction:
+    batch_size: 128
+    num_workers: 0
+    pin_memory: true
+  mixing:
+    distractor_peak_fraction: 1.0
+    condition_separation_ppm: 10.0
+    neutral_mass_separation_ppm: 10.0
+    merge_ppm: 5.0
+  output:
+    report_path:

@@ -1,0 +1,72 @@
+embedding_evaluation:
+  name: ninespecies_v2_peptide_retrieval
+  dataset:
+    parquet_path: /path/to/data/probing_datasets/ninespecies_v2_peptide_retrieval.parquet
+    peptide_id_column: peptide_id
+    partition_column: species
+
+  # Standalone evaluation uses the full balanced corpus. Online evaluation
+  # overrides this with a fixed smaller subset below.
+  selection:
+    seed: 0
+    max_peptides_per_partition: 1000
+    max_spectra_per_peptide: 10
+  extraction:
+    batch_size: 256
+    num_workers: 2
+    pin_memory: true
+    show_progress: true
+  metrics_device: model
+
+  retrieval:
+    enabled: true
+    metric: cosine
+    ks: [1, 5, 10]
+    query_seed: 0
+    query_batch_size: 128
+    show_progress: true
+  # Same-charge / 10-ppm candidate retrieval removes the broad precursor
+  # shortcut. It reports eligibility and random-ranking expectations.
+  mass_controlled_retrieval:
+    enabled: true
+    ppm_tolerance: 10.0
+  cross_charge_retrieval:
+    enabled: true
+    # Restrict to other charge states and neutral-mass-matched candidates.
+    # Coverage is reported because repeated cross-charge peptide observations
+    # and near-isobar negatives are not uniformly available by species.
+    neutral_mass_ppm_tolerance: 10.0
+
+  compactness:
+    enabled: true
+    seed: 0
+    max_between_samples: 1000
+    show_progress: true
+    silhouette:
+      enabled: false
+      max_samples: 3000
+      seed: 0
+
+  # A single JSON is emitted in standalone mode. Set write_report: false for
+  # print-only execution. Online evaluations only log scalar metrics.
+  output:
+    write_report: true
+    report_path:
+    print_report: true
+
+  online:
+    enabled: false
+    on_fit_start: false
+    overrides:
+      selection:
+        max_peptides_per_partition: 250
+        max_spectra_per_peptide: 10
+      extraction:
+        show_progress: false
+      retrieval:
+        show_progress: false
+      compactness:
+        show_progress: false
+      output:
+        write_report: false
+        print_report: false

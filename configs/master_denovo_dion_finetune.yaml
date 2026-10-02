@@ -1,0 +1,61 @@
+# Portable dIon de novo fine-tuning master configuration.
+# Supply dataset and checkpoint paths on the CLI; see docs/finetune_denovo.md.
+data_root_dir: .
+output_dir: output/checkpoints
+log_dir: output/logs
+embedding_dir: output/embedding_cache
+wandb_project: dion-denovo
+wandb_entity: null
+log_wandb: 0
+num_workers: 2
+matmul_precision: high
+precision: bf16-mixed
+
+save_top_k: 5
+save_last: 1
+every_n_epochs: 1
+remove_ckpt: 0
+
+peak_filter_method: default
+intensity_scaling: basepeak
+min_intensity: 0.0001
+min_mz: 0
+max_mz: 2500
+max_length: 100
+max_peaks: 200
+
+use_mass: 1
+use_charge: 1
+use_energy: 0
+max_charge: 10
+encoder_model: encoder_larger_deeper
+decoder_model: casanovo_decoder
+cls_token: 0
+cross_attend: 1
+
+accum_iter: 1
+batch_size: -1
+scale_lr_by_batchsize: 0
+seed: 0
+accelerator: gpu
+num_devices: 1
+num_nodes: 1
+strategy: auto
+
+pretrain: 0
+pretraining_task: dion
+pretrain_config: configs/pretrain/dion_hybrid_distractor_null_local_100pct.yaml
+encoder_weights:
+probe_on_fit_start: 0
+probe_every_n_steps: 6000
+
+downstream_task: denovo_tf
+downstream_config: configs/downstream/denovo_custom_lance.yaml
+downstream_root_dir:
+downstream_weights:
+limit_train_batches: 1.0
+limit_val_batches: 1.0
+limit_test_batches: 1.0
+validate_every_n_epochs: 1
+validate_on_end: 1
+test_on_end: 0

@@ -1,0 +1,42 @@
+# Fixed 1,024-D peak-only binned-spectrum cosine / spectral-angle baseline.
+# This config intentionally disables all precursor metadata features.
+data_root_dir:
+output_dir: /tmp/dion_binned_spectrum_embedding
+log_dir: /tmp/dion_binned_spectrum_embedding_logs
+embedding_dir: /tmp/dion_binned_spectrum_embedding_cache
+log_wandb: 0
+num_workers: 2
+precision: bf16-mixed
+
+# The historical default matches DINO's 200-peak protocol. Pass
+# --max_peaks 0 for an explicitly uncapped conventional baseline.
+peak_filter_method: default
+intensity_scaling: minmax
+min_intensity: 0.0001
+min_mz: 0
+max_mz: 2500
+max_length: 30
+max_peaks: 200
+top_peaks: 150
+
+# Must remain disabled: this reference is peak/intensity information only.
+use_mass: 0
+use_charge: 0
+max_charge: 10
+
+encoder_model: encoder_binned_baseline_1024d
+cls_token: 0
+cross_attend: 1
+pretrain: 0
+encoder_weights:
+pretrain_config: configs/pretrain/dummy_binned.yaml
+pretraining_task: dummy
+probing_config: configs/probing_tasks/embedding_probes.yaml
+# Required by the shared argument parser; unused by standalone embedding scripts.
+downstream_config: configs/downstream/sqa_default.yaml
+downstream_task: none
+downstream_root_dir: /path/to/data/SQA_dataset/dummy
+accelerator: gpu
+num_devices: 1
+num_nodes: 1
+batch_size: 256

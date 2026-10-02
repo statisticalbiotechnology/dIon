@@ -1,0 +1,26 @@
+task: denovo
+dataset_name: ninespecies_v2
+downstream_root_dir: /path/to/data/9_species_V2/lance_species
+top_peaks: 150
+pep_length:
+- 0
+- 100
+num_workers: 8
+test_species: saccharomyces_cerevisiae
+val_percentage: 0.1
+denovo_tf:
+  conf_threshold: 0
+  calculate_precision: true
+  n_beams: 1
+  log_predictions: false
+  batch_size: 64
+  ref_batch_size: 1024
+  train_label_smoothing: 0.0
+  weight_decay: 0.0
+  epochs: 50
+  subset: 0
+  decoder_dropout: 0.25
+  decoder_use_cls: false
+  learning_rate: 0.0004
+  warmup_steps: 20000
+  cosine_period_steps: 1000000

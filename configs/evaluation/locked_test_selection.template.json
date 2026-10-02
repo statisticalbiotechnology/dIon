@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "status": "draft",
+  "selection_basis": "Complete validation only; no locked-test metrics were used.",
+  "representation": {
+    "models": [
+      {
+        "model_id": "hybrid_300_last",
+        "conditionings": ["conditioned", "null"],
+        "corpora": ["bacterial", "kingdoms"]
+      }
+    ]
+  },
+  "downstream": [
+    {
+      "task": "sqa",
+      "model_label": "replace_after_validation",
+      "master_config": "configs/master_sqa_hybrid_casanovo_19pxd_balanced_charge1_10.yaml",
+      "downstream_config": "configs/downstream/sqa_casanovo_19pxd_finetune.yaml",
+      "encoder_checkpoint": "/absolute/path/to/pretrained_encoder.ckpt",
+      "downstream_checkpoint": "/absolute/path/to/validation_selected_head.ckpt",
+      "freeze_encoder": false,
+      "precursor_conditioning": "conditioned",
+      "decoder_model": "sqa_mlp_head",
+      "external_embedding_cache": "",
+      "wandb_project": "ms2-sqa"
+    }
+  ]
+}

@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "status": "frozen",
+  "selection_basis": "All three 1% and rerun canonical-10% SupCon variants are evaluated as a prespecified label-efficiency cohort. Each checkpoint is the minimum metric_learning_val_loss_epoch checkpoint selected on its fixed seeded 100-batch validation draw. No held-out representation metric was used to choose these checkpoints.",
+  "representation": {
+    "models": [
+      {
+        "model_id": "metric_scratch_1pct_val_loss",
+        "conditionings": [
+          "conditioned"
+        ],
+        "corpora": [
+          "ninespecies_v2",
+          "bacterial",
+          "kingdoms"
+        ]
+      },
+      {
+        "model_id": "metric_hybrid_300_1pct_val_loss",
+        "conditionings": [
+          "conditioned"
+        ],
+        "corpora": [
+          "ninespecies_v2",
+          "bacterial",
+          "kingdoms"
+        ]
+      },
+      {
+        "model_id": "metric_hybrid_300_frozen_1pct_val_loss",
+        "conditionings": [
+          "conditioned"
+        ],
+        "corpora": [
+          "ninespecies_v2",
+          "bacterial",
+          "kingdoms"
+        ]
+      },
+      {
+        "model_id": "metric_scratch_10pct_hybrid300last_val_loss",
+        "conditionings": [
+          "conditioned"
+        ],
+        "corpora": [
+          "ninespecies_v2",
+          "bacterial",
+          "kingdoms"
+        ]
+      },
+      {
+        "model_id": "metric_hybrid_300_10pct_hybrid300last_val_loss",
+        "conditionings": [
+          "conditioned"
+        ],
+        "corpora": [
+          "ninespecies_v2",
+          "bacterial",
+          "kingdoms"
+        ]
+      },
+      {
+        "model_id": "metric_hybrid_300_frozen_10pct_hybrid300last_val_loss",
+        "conditionings": [
+          "conditioned"
+        ],
+        "corpora": [
+          "ninespecies_v2",
+          "bacterial",
+          "kingdoms"
+        ]
+      }
+    ]
+  },
+  "downstream": []
+}

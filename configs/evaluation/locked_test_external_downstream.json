@@ -1,0 +1,103 @@
+{
+  "schema_version": 1,
+  "status": "frozen",
+  "selection_basis": "Completed full-validation eval_only runs only; no test metric was used for model or head selection.",
+  "downstream": [
+    {
+      "task": "sqa",
+      "model_label": "casanovo_v4_peak_mean_frozen",
+      "master_config": "configs/master_sqa_casanovo_v4_frozen.yaml",
+      "downstream_config": "configs/downstream/sqa_casanovo_19pxd_frozen.yaml",
+      "downstream_checkpoint": "/path/to/checkpoints/sqa/sqa_casanovo_v4_peakmean_frozen_17506949_0_21_11_37_127992__12_09_26/epoch=2-val_auc=0.85.ckpt",
+      "freeze_encoder": true,
+      "precursor_conditioning": "not_applicable",
+      "decoder_model": "sqa_mlp_head",
+      "external_embedding_cache": "/path/to/work/casanovo_v4_downstream_validation_cache/sqa/cache",
+      "wandb_project": "ms2-sqa"
+    },
+    {
+      "task": "chimericity",
+      "model_label": "casanovo_v4_peak_mean_frozen",
+      "master_config": "configs/master_chimericity_hye_casanovo_v4_frozen.yaml",
+      "downstream_config": "configs/downstream/chimericity_hye.yaml",
+      "downstream_checkpoint": "/path/to/checkpoints/chimericity/chimericity_casanovo_v4_peakmean_frozen_17506949_1_21_11_44_251302__12_09_26/epoch=4-val_auc=0.78.ckpt",
+      "freeze_encoder": true,
+      "precursor_conditioning": "not_applicable",
+      "decoder_model": "sqa_mlp_head",
+      "external_embedding_cache": "/path/to/work/casanovo_v4_downstream_validation_cache/chimericity/cache",
+      "wandb_project": "ms2-chimericity"
+    },
+    {
+      "task": "oxidized_met",
+      "model_label": "casanovo_v4_peak_mean_frozen",
+      "master_config": "configs/master_oxidized_met_casanovo_v4_frozen.yaml",
+      "downstream_config": "configs/downstream/oxidized_met.yaml",
+      "downstream_checkpoint": "/path/to/checkpoints/oxidized_met/oxidized_met_casanovo_v4_peakmean_frozen_17506949_2_21_11_43_888756__12_09_26/epoch=2-val_auc=0.77.ckpt",
+      "freeze_encoder": true,
+      "precursor_conditioning": "not_applicable",
+      "decoder_model": "sqa_mlp_head",
+      "external_embedding_cache": "/path/to/work/casanovo_v4_downstream_validation_cache/oxidized_met/cache",
+      "wandb_project": "ms2-oxidized-met"
+    },
+    {
+      "task": "retention_time",
+      "model_label": "casanovo_v4_peak_mean_ordinal_frozen",
+      "master_config": "configs/master_retention_time_casanovo_v4_ordinal_frozen.yaml",
+      "downstream_config": "configs/downstream/retention_time_probe.yaml",
+      "downstream_checkpoint": "/path/to/checkpoints/retention_time/retention_time_casanovo_v4_peakmean_ordinal_frozen_17506949_3_21_11_44_463496__12_09_26/epoch=18-retention_time_val_mae=0.06.ckpt",
+      "freeze_encoder": true,
+      "precursor_conditioning": "not_applicable",
+      "decoder_model": "linear_ordinal_head",
+      "external_embedding_cache": "/path/to/work/casanovo_v4_downstream_validation_cache/retention_time/cache",
+      "wandb_project": "ms2-retention-time"
+    },
+    {
+      "task": "sqa",
+      "model_label": "instanovo_fm_mean_pool_frozen",
+      "master_config": "configs/master_sqa_instanovo_fm_frozen.yaml",
+      "downstream_config": "configs/downstream/sqa_casanovo_19pxd_frozen.yaml",
+      "downstream_checkpoint": "/path/to/checkpoints/sqa/sqa_instanovo_fm_meanpool_frozen_17506950_0_21_06_36_001575__12_09_26/epoch=4-val_auc=0.85.ckpt",
+      "freeze_encoder": true,
+      "precursor_conditioning": "not_applicable",
+      "decoder_model": "sqa_mlp_head",
+      "external_embedding_cache": "/path/to/work/instanovo_fm_downstream_validation_cache/sqa/cache",
+      "wandb_project": "ms2-sqa"
+    },
+    {
+      "task": "chimericity",
+      "model_label": "instanovo_fm_mean_pool_frozen",
+      "master_config": "configs/master_chimericity_hye_instanovo_fm_frozen.yaml",
+      "downstream_config": "configs/downstream/chimericity_hye.yaml",
+      "downstream_checkpoint": "/path/to/checkpoints/chimericity/chimericity_instanovo_fm_meanpool_frozen_17506950_1_21_06_36_136622__12_09_26/epoch=4-val_auc=0.79.ckpt",
+      "freeze_encoder": true,
+      "precursor_conditioning": "not_applicable",
+      "decoder_model": "sqa_mlp_head",
+      "external_embedding_cache": "/path/to/work/instanovo_fm_downstream_validation_cache/chimericity/cache",
+      "wandb_project": "ms2-chimericity"
+    },
+    {
+      "task": "oxidized_met",
+      "model_label": "instanovo_fm_mean_pool_frozen",
+      "master_config": "configs/master_oxidized_met_instanovo_fm_frozen.yaml",
+      "downstream_config": "configs/downstream/oxidized_met.yaml",
+      "downstream_checkpoint": "/path/to/checkpoints/oxidized_met/oxidized_met_instanovo_fm_meanpool_frozen_17506950_2_21_06_40_589363__12_09_26/epoch=8-val_auc=0.82.ckpt",
+      "freeze_encoder": true,
+      "precursor_conditioning": "not_applicable",
+      "decoder_model": "sqa_mlp_head",
+      "external_embedding_cache": "/path/to/work/instanovo_fm_downstream_validation_cache/oxidized_met/cache",
+      "wandb_project": "ms2-oxidized-met"
+    },
+    {
+      "task": "retention_time",
+      "model_label": "instanovo_fm_mean_pool_regression_frozen",
+      "master_config": "configs/master_retention_time_instanovo_fm_regression_frozen.yaml",
+      "downstream_config": "configs/downstream/retention_time_regression_probe.yaml",
+      "downstream_checkpoint": "/path/to/checkpoints/retention_time/retention_time_instanovo_fm_meanpool_regression_frozen_17506950_4_21_06_29_963482__12_09_26/epoch=11-retention_time_val_mae=0.06.ckpt",
+      "freeze_encoder": true,
+      "precursor_conditioning": "not_applicable",
+      "decoder_model": "linear_regression_head",
+      "external_embedding_cache": "/path/to/work/instanovo_fm_downstream_validation_cache/retention_time/cache",
+      "wandb_project": "ms2-retention-time"
+    }
+  ]
+}

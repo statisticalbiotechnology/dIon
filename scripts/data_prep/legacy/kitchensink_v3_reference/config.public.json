@@ -1,0 +1,226 @@
+{
+  "batch_size": 4096,
+  "max_output_gib": 110,
+  "release_scope": "public recipe; replace source locations with local equivalents before rebuilding",
+  "seed": 42,
+  "seed_dataset": {
+    "description": "Frozen highest-quality seed. Its train/val/test membership is retained exactly.",
+    "id": "mskb_v5_seed",
+    "root": "${MSKB_FINAL_ROOT}"
+  },
+  "sources": [
+    {
+      "charge_limits": {
+        "1-4": 650000,
+        "5": 650000,
+        "6": 165000,
+        "7": 30000,
+        "8+": 6000
+      },
+      "enabled": true,
+      "id": "mkb2",
+      "kind": "mkb2_arrow",
+      "path_globs": [
+        "${MASSIVE_KB_V2_ROOT}/lance/mkb_train_*.lance",
+        "${MASSIVE_KB_V2_ROOT}/lance/mkb_val.lance"
+      ],
+      "project_cap": 75000,
+      "quality": {
+        "drop_chimeric": true,
+        "fdr_max": 0.01
+      },
+      "rationale": "Large MassIVE-KB v2 expansion; preserve modified_sequence. Scarce charge 7-8 candidates bypass lower-charge project caps but remain bounded by source quotas.",
+      "run_cap": 3000,
+      "source_priority": 10,
+      "uncapped_buckets": [
+        "7",
+        "8+"
+      ]
+    },
+    {
+      "charge_limits": {
+        "1-4": 700000,
+        "5": 40000,
+        "6": 5000,
+        "7+": 500
+      },
+      "enabled": true,
+      "id": "proteometools_pxd004732",
+      "kind": "proteometools",
+      "project_accession": "PXD004732",
+      "quality": {
+        "drop_contaminant": true,
+        "drop_reverse": true,
+        "pep_max": 0.01
+      },
+      "rationale": "Synthetic human ProteomeTools HCD; physical duplicates with MKB2 are removed by run+scan+charge+m/z.",
+      "root": "${PROTEOMETOOLS_ROOT}/PXD004732",
+      "run_cap": 3000,
+      "source_priority": 20
+    },
+    {
+      "charge_limits": {
+        "1-4": 590000,
+        "5": 9000,
+        "6": 500,
+        "7+": 100
+      },
+      "enabled": true,
+      "id": "proteometools_pxd010595",
+      "kind": "proteometools",
+      "project_accession": "PXD010595",
+      "quality": {
+        "drop_contaminant": true,
+        "drop_reverse": true,
+        "pep_max": 0.01
+      },
+      "rationale": "Independent synthetic human ProteomeTools HCD experiment, physically disjoint from MKB2 by prior audit.",
+      "root": "${PROTEOMETOOLS_ROOT}/PXD010595",
+      "run_cap": 3000,
+      "source_priority": 20
+    },
+    {
+      "charge_limits": {
+        "1-4": 1030000,
+        "5": 72000,
+        "6": 8000,
+        "7+": 1000
+      },
+      "enabled": true,
+      "id": "proteometools_pxd021013",
+      "kind": "proteometools",
+      "project_accession": "PXD021013",
+      "quality": {
+        "drop_contaminant": true,
+        "drop_reverse": true,
+        "pep_max": 0.01
+      },
+      "rationale": "ProteomeTools Part III adds HLA and non-tryptic/LysN/AspN peptide diversity.",
+      "root": "${PROTEOMETOOLS_ROOT}/PXD021013",
+      "run_cap": 3000,
+      "source_priority": 20
+    },
+    {
+      "charge_limits": {
+        "1-4": 700000,
+        "5": 70000,
+        "6+": 25000
+      },
+      "enabled": true,
+      "id": "kingdoms",
+      "kind": "kingdoms_parquet",
+      "path_globs": [
+        "${KINGDOMS_ROOT}/processed/*.parquet"
+      ],
+      "project_cap": 50000,
+      "quality": {
+        "drop_chimeric": true,
+        "qvalue_max": 0.01
+      },
+      "rationale": "Multi-species coverage; caps prevent a few large species or runs from dominating.",
+      "run_cap": 3000,
+      "source_priority": 30
+    },
+    {
+      "charge_limits": {
+        "1-4": 550000,
+        "10": 203,
+        "5": 334376,
+        "6": 68923,
+        "7": 9216,
+        "8": 2061,
+        "9": 373
+      },
+      "enabled": true,
+      "id": "bacteria_pxd010000_regenerated_v2",
+      "kind": "bacteria_arrow",
+      "path_globs": [
+        "${BACTERIA_PXD010000_ROOT}/train.lance",
+        "${BACTERIA_PXD010000_ROOT}/val.lance"
+      ],
+      "project_accession": "PXD010000",
+      "rationale": "PXD010000-only bacterial pool with MSGF+ rank-1 oxidation annotations encoded as M+15.995; bare C is retained. PXD010613 remains external evaluation only.",
+      "run_cap": 3000,
+      "source_priority": 30,
+      "uncapped_buckets": [
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "10"
+      ]
+    },
+    {
+      "charge_limits": {
+        "1-4": 70000,
+        "5": 70000,
+        "6": 20000,
+        "7": 2000
+      },
+      "enabled": true,
+      "id": "highcharge_v3_combined_train_only",
+      "kind": "highcharge_v3_arrow",
+      "path_globs": [
+        "${HIGHCHARGE_V3_ROOT}/train.lance"
+      ],
+      "rationale": "Canonical highcharge-v3 training split only. The corresponding val/test splits, including charge_ge5_val, plasma_val, and legacy_v3_val slices, are permanently reserved for external evaluation.",
+      "source_priority": 25,
+      "uncapped_buckets": [
+        "1-4",
+        "5",
+        "6",
+        "7"
+      ]
+    },
+    {
+      "charge_limits": {
+        "1-4": 250000,
+        "5": 10000,
+        "6+": 1000
+      },
+      "enabled": true,
+      "id": "nonenzymatic_massivekb",
+      "kind": "nonenz_mgf",
+      "path_globs": [
+        "${NONENZYMATIC_MASSIVEKB_ROOT}/nonenz.*.mgf"
+      ],
+      "rationale": "Casanovo multi-enzyme/non-tryptic source; retain only after heldout and physical duplicate gates.",
+      "run_cap": 3000,
+      "source_priority": 40
+    },
+    {
+      "charge_limits": {
+        "5": 230000,
+        "6": 65000,
+        "7": 40000,
+        "8+": 6000
+      },
+      "enabled": false,
+      "id": "usigrabber_high_v2",
+      "kind": "usigrabber_arrow",
+      "path_globs": [
+        "${USIGRABBER_HIGH_V2_ROOT}/train_high.lance",
+        "${USIGRABBER_HIGH_V2_ROOT}/val_high.lance",
+        "${USIGRABBER_HIGH_V2_ROOT}/test_high.lance"
+      ],
+      "project_cap": 75000,
+      "rationale": "Excluded: highcharge-v2 labels were not sufficiently reliable in finetuning experiments.",
+      "run_cap": 3000,
+      "source_priority": 50
+    },
+    {
+      "enabled": false,
+      "id": "massivekb_v1",
+      "kind": "excluded",
+      "rationale": "Excluded deliberately: it is the upstream source of MSKBv5 and has high redundancy with the frozen seed."
+    }
+  ],
+  "split": {
+    "novel_test_fraction": 0.05,
+    "novel_train_fraction": 0.9,
+    "novel_val_fraction": 0.05
+  },
+  "target_examples": 8000000,
+  "version": "denovo_kitchensink_v3"
+}

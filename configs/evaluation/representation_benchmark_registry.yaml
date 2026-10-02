@@ -1,0 +1,377 @@
+# Canonical candidates and cohorts for offline representation evaluation.
+# Add a future checkpoint here; do not fork a submission script per checkpoint.
+models:
+  random_hybrid:
+    kind: random_dino
+    description: Architecture-matched seeded random DINOv2 global representation.
+    master_config: configs/master_dion_hybrid_distractor_null_local.yaml
+    pretrain_config: configs/pretrain/dion_hybrid_distractor_null_local_100pct.yaml
+    pretraining_task: dion
+    embedding_readout: backbone
+    conditioning_modes: [conditioned, "null"]
+    random_seed: 0
+    preprocessing:
+      max_peaks: 200
+      use_mass: 1
+      use_charge: 1
+      use_energy: 0
+      max_charge: 10
+      peak_filter_method: default
+      intensity_scaling: basepeak
+      min_mz: 0
+      max_mz: 2500
+      min_intensity: 0.0001
+      min_peaks: 0
+      remove_precursor_tol: 2.0
+
+  hybrid_100_last:
+    kind: dino_checkpoint
+    description: Hybrid DINOv2, 100 epoch ClusterB checkpoint.
+    checkpoint: /path/to/checkpoints/important/DINO/bacteria/dinov2_hybrid_distractor_null_local_maxpeaks200_bs128_64gpu_cluster_b_epoch100/last.ckpt
+    master_config: configs/master_dion_hybrid_distractor_null_local.yaml
+    pretrain_config: configs/pretrain/dion_hybrid_distractor_null_local_100pct.yaml
+    pretraining_task: dion
+    embedding_readout: backbone
+    conditioning_modes: [conditioned, "null"]
+    preprocessing:
+      max_peaks: 200
+      use_mass: 1
+      use_charge: 1
+      use_energy: 0
+      max_charge: 10
+      peak_filter_method: default
+      intensity_scaling: basepeak
+      min_mz: 0
+      max_mz: 2500
+      min_intensity: 0.0001
+      min_peaks: 0
+      remove_precursor_tol: 2.0
+
+  hybrid_300_last:
+    kind: dino_checkpoint
+    description: Hybrid DINOv2, 300 epoch ClusterB checkpoint.
+    checkpoint: /path/to/checkpoints/important/DINO/bacteria/dinov2_hybrid_distractor_null_local_300epochs_maxpeaks200_bs128_64gpu_cluster_b/last.ckpt
+    master_config: configs/master_dion_hybrid_distractor_null_local.yaml
+    pretrain_config: configs/pretrain/dion_hybrid_distractor_null_local_100pct.yaml
+    pretraining_task: dion
+    embedding_readout: backbone
+    conditioning_modes: [conditioned, "null"]
+    preprocessing:
+      max_peaks: 200
+      use_mass: 1
+      use_charge: 1
+      use_energy: 0
+      max_charge: 10
+      peak_filter_method: default
+      intensity_scaling: basepeak
+      min_mz: 0
+      max_mz: 2500
+      min_intensity: 0.0001
+      min_peaks: 0
+      remove_precursor_tol: 2.0
+
+  metric_hybrid_100_frozen_10pct_val_loss:
+    kind: metric_learning_checkpoint
+    description: Frozen Hybrid-100 SupCon, 10% peptide budget, validation-loss selected.
+    checkpoint: /path/to/checkpoints/metric_learning/bacterial_10pct/metric_learning_bacterial_10pct_hybrid100e_frozen_17488576_1_16_49_39_770639__08_09_26/epoch=70-metric_learning_val_loss_epoch=0.73.ckpt
+    master_config: configs/master_metric_learning_bacterial.yaml
+    pretrain_config: configs/pretrain/dion_hybrid_distractor_null_local_100pct.yaml
+    downstream_config: configs/downstream/metric_learning_bacterial.yaml
+    pretraining_task: dion
+    conditioning_modes: [conditioned]
+    preprocessing:
+      max_peaks: 200
+      use_mass: 1
+      use_charge: 1
+      use_energy: 0
+      max_charge: 10
+      peak_filter_method: default
+      intensity_scaling: minmax
+      min_mz: 0
+      max_mz: 2500
+      min_intensity: 0.0001
+      min_peaks: 0
+      remove_precursor_tol: 2.0
+
+  metric_hybrid_300_frozen_10pct_val_loss:
+    kind: metric_learning_checkpoint
+    description: Frozen Hybrid-300 SupCon, 10% peptide budget, validation-loss selected.
+    checkpoint: /path/to/checkpoints/metric_learning/bacterial_10pct/metric_learning_bacterial_10pct_hybrid300e219_frozen_17488576_0_16_48_50_397547__08_09_26/epoch=76-metric_learning_val_loss_epoch=0.86.ckpt
+    master_config: configs/master_metric_learning_bacterial.yaml
+    pretrain_config: configs/pretrain/dion_hybrid_distractor_null_local_100pct.yaml
+    downstream_config: configs/downstream/metric_learning_bacterial.yaml
+    pretraining_task: dion
+    conditioning_modes: [conditioned]
+    preprocessing:
+      max_peaks: 200
+      use_mass: 1
+      use_charge: 1
+      use_energy: 0
+      max_charge: 10
+      peak_filter_method: default
+      intensity_scaling: minmax
+      min_mz: 0
+      max_mz: 2500
+      min_intensity: 0.0001
+      min_peaks: 0
+      remove_precursor_tol: 2.0
+
+  metric_scratch_10pct_val_loss:
+    kind: metric_learning_checkpoint
+    description: Scratch SupCon, 10% peptide budget, validation-loss selected.
+    checkpoint: /path/to/checkpoints/metric_learning/bacterial_10pct/metric_learning_bacterial_10pct_scratch_17489744_0_19_41_09_609034__08_09_26/epoch=22-metric_learning_val_loss_epoch=0.41.ckpt
+    master_config: configs/master_metric_learning_bacterial.yaml
+    pretrain_config: configs/pretrain/dion_hybrid_distractor_null_local_100pct.yaml
+    downstream_config: configs/downstream/metric_learning_bacterial.yaml
+    pretraining_task: dion
+    conditioning_modes: [conditioned]
+    preprocessing:
+      max_peaks: 200
+      use_mass: 1
+      use_charge: 1
+      use_energy: 0
+      max_charge: 10
+      peak_filter_method: default
+      intensity_scaling: minmax
+      min_mz: 0
+      max_mz: 2500
+      min_intensity: 0.0001
+      min_peaks: 0
+      remove_precursor_tol: 2.0
+
+  metric_hybrid_100_10pct_val_loss:
+    kind: metric_learning_checkpoint
+    description: Hybrid-100 SupCon, 10% peptide budget, validation-loss selected.
+    checkpoint: /path/to/checkpoints/metric_learning/bacterial_10pct/metric_learning_bacterial_10pct_hybrid100e_17489744_2_19_40_59_694358__08_09_26/epoch=29-metric_learning_val_loss_epoch=0.37.ckpt
+    master_config: configs/master_metric_learning_bacterial.yaml
+    pretrain_config: configs/pretrain/dion_hybrid_distractor_null_local_100pct.yaml
+    downstream_config: configs/downstream/metric_learning_bacterial.yaml
+    pretraining_task: dion
+    conditioning_modes: [conditioned]
+    preprocessing:
+      max_peaks: 200
+      use_mass: 1
+      use_charge: 1
+      use_energy: 0
+      max_charge: 10
+      peak_filter_method: default
+      intensity_scaling: minmax
+      min_mz: 0
+      max_mz: 2500
+      min_intensity: 0.0001
+      min_peaks: 0
+      remove_precursor_tol: 2.0
+
+  metric_hybrid_300_10pct_val_loss:
+    kind: metric_learning_checkpoint
+    description: Hybrid-300 SupCon, 10% peptide budget, validation-loss selected.
+    checkpoint: /path/to/checkpoints/metric_learning/bacterial_10pct/metric_learning_bacterial_10pct_hybrid300e219_17489744_1_19_41_10_023496__08_09_26/epoch=26-metric_learning_val_loss_epoch=0.35.ckpt
+    master_config: configs/master_metric_learning_bacterial.yaml
+    pretrain_config: configs/pretrain/dion_hybrid_distractor_null_local_100pct.yaml
+    downstream_config: configs/downstream/metric_learning_bacterial.yaml
+    pretraining_task: dion
+    conditioning_modes: [conditioned]
+    preprocessing:
+      max_peaks: 200
+      use_mass: 1
+      use_charge: 1
+      use_energy: 0
+      max_charge: 10
+      peak_filter_method: default
+      intensity_scaling: minmax
+      min_mz: 0
+      max_mz: 2500
+      min_intensity: 0.0001
+      min_peaks: 0
+      remove_precursor_tol: 2.0
+
+  metric_scratch_1pct_val_loss:
+    kind: metric_learning_checkpoint
+    description: Scratch SupCon, 1% peptide budget, validation-loss selected.
+    checkpoint: /path/to/checkpoints/metric_learning/bacterial_1pct/metric_learning_bacterial_1pct_scratch_17509041_0_18_07_55_871576__13_09_26/epoch=6-metric_learning_val_loss_epoch=0.58.ckpt
+    master_config: configs/master_metric_learning_bacterial_1pct.yaml
+    pretrain_config: configs/pretrain/dion_hybrid_distractor_null_local_100pct.yaml
+    downstream_config: configs/downstream/metric_learning_bacterial_1pct.yaml
+    pretraining_task: dion
+    conditioning_modes: [conditioned]
+    preprocessing:
+      max_peaks: 200
+      use_mass: 1
+      use_charge: 1
+      use_energy: 0
+      max_charge: 10
+      peak_filter_method: default
+      intensity_scaling: minmax
+      min_mz: 0
+      max_mz: 2500
+      min_intensity: 0.0001
+      min_peaks: 0
+      remove_precursor_tol: 2.0
+
+  metric_hybrid_300_1pct_val_loss:
+    kind: metric_learning_checkpoint
+    description: Hybrid-300-last SupCon, 1% peptide budget, validation-loss selected.
+    checkpoint: /path/to/checkpoints/metric_learning/bacterial_1pct/metric_learning_bacterial_1pct_hybrid300last_conditioned_17509041_1_18_07_58_966377__13_09_26/epoch=2-metric_learning_val_loss_epoch=0.51.ckpt
+    master_config: configs/master_metric_learning_bacterial_1pct.yaml
+    pretrain_config: configs/pretrain/dion_hybrid_distractor_null_local_100pct.yaml
+    downstream_config: configs/downstream/metric_learning_bacterial_1pct.yaml
+    pretraining_task: dion
+    conditioning_modes: [conditioned]
+    preprocessing:
+      max_peaks: 200
+      use_mass: 1
+      use_charge: 1
+      use_energy: 0
+      max_charge: 10
+      peak_filter_method: default
+      intensity_scaling: minmax
+      min_mz: 0
+      max_mz: 2500
+      min_intensity: 0.0001
+      min_peaks: 0
+      remove_precursor_tol: 2.0
+
+  metric_hybrid_300_frozen_1pct_val_loss:
+    kind: metric_learning_checkpoint
+    description: Frozen Hybrid-300-last SupCon, 1% peptide budget, validation-loss selected.
+    checkpoint: /path/to/checkpoints/metric_learning/bacterial_1pct/metric_learning_bacterial_1pct_hybrid300last_conditioned_frozen_17509041_2_18_08_04_142402__13_09_26/epoch=3-metric_learning_val_loss_epoch=1.21.ckpt
+    master_config: configs/master_metric_learning_bacterial_1pct.yaml
+    pretrain_config: configs/pretrain/dion_hybrid_distractor_null_local_100pct.yaml
+    downstream_config: configs/downstream/metric_learning_bacterial_1pct.yaml
+    pretraining_task: dion
+    conditioning_modes: [conditioned]
+    preprocessing:
+      max_peaks: 200
+      use_mass: 1
+      use_charge: 1
+      use_energy: 0
+      max_charge: 10
+      peak_filter_method: default
+      intensity_scaling: minmax
+      min_mz: 0
+      max_mz: 2500
+      min_intensity: 0.0001
+      min_peaks: 0
+      remove_precursor_tol: 2.0
+
+  metric_scratch_10pct_hybrid300last_val_loss:
+    kind: metric_learning_checkpoint
+    description: Scratch SupCon, rerun canonical 10% peptide budget, validation-loss selected.
+    checkpoint: /path/to/checkpoints/metric_learning/bacterial_10pct_hybrid300last/metric_learning_bacterial_10pct_hybrid300last_scratch_17509044_0_18_11_49_432784__13_09_26/epoch=22-metric_learning_val_loss_epoch=0.41.ckpt
+    master_config: configs/master_metric_learning_bacterial_10pct_hybrid300last.yaml
+    pretrain_config: configs/pretrain/dion_hybrid_distractor_null_local_100pct.yaml
+    downstream_config: configs/downstream/metric_learning_bacterial_10pct_hybrid300last.yaml
+    pretraining_task: dion
+    conditioning_modes: [conditioned]
+    preprocessing:
+      max_peaks: 200
+      use_mass: 1
+      use_charge: 1
+      use_energy: 0
+      max_charge: 10
+      peak_filter_method: default
+      intensity_scaling: minmax
+      min_mz: 0
+      max_mz: 2500
+      min_intensity: 0.0001
+      min_peaks: 0
+      remove_precursor_tol: 2.0
+
+  metric_hybrid_300_10pct_hybrid300last_val_loss:
+    kind: metric_learning_checkpoint
+    description: Hybrid-300-last SupCon, canonical 10% peptide budget, validation-loss selected.
+    checkpoint: /path/to/checkpoints/metric_learning/bacterial_10pct_hybrid300last/metric_learning_bacterial_10pct_hybrid300last_hybrid300last_conditioned_17509044_1_18_11_50_064206__13_09_26/epoch=15-metric_learning_val_loss_epoch=0.34.ckpt
+    master_config: configs/master_metric_learning_bacterial_10pct_hybrid300last.yaml
+    pretrain_config: configs/pretrain/dion_hybrid_distractor_null_local_100pct.yaml
+    downstream_config: configs/downstream/metric_learning_bacterial_10pct_hybrid300last.yaml
+    pretraining_task: dion
+    conditioning_modes: [conditioned]
+    preprocessing:
+      max_peaks: 200
+      use_mass: 1
+      use_charge: 1
+      use_energy: 0
+      max_charge: 10
+      peak_filter_method: default
+      intensity_scaling: minmax
+      min_mz: 0
+      max_mz: 2500
+      min_intensity: 0.0001
+      min_peaks: 0
+      remove_precursor_tol: 2.0
+
+  metric_hybrid_300_frozen_10pct_hybrid300last_val_loss:
+    kind: metric_learning_checkpoint
+    description: Frozen Hybrid-300-last SupCon, canonical 10% peptide budget, validation-loss selected.
+    checkpoint: /path/to/checkpoints/metric_learning/bacterial_10pct_hybrid300last/metric_learning_bacterial_10pct_hybrid300last_hybrid300last_conditioned_frozen_17509044_2_18_11_48_590418__13_09_26/epoch=26-metric_learning_val_loss_epoch=0.90.ckpt
+    master_config: configs/master_metric_learning_bacterial_10pct_hybrid300last.yaml
+    pretrain_config: configs/pretrain/dion_hybrid_distractor_null_local_100pct.yaml
+    downstream_config: configs/downstream/metric_learning_bacterial_10pct_hybrid300last.yaml
+    pretraining_task: dion
+    conditioning_modes: [conditioned]
+    preprocessing:
+      max_peaks: 200
+      use_mass: 1
+      use_charge: 1
+      use_energy: 0
+      max_charge: 10
+      peak_filter_method: default
+      intensity_scaling: minmax
+      min_mz: 0
+      max_mz: 2500
+      min_intensity: 0.0001
+      min_peaks: 0
+      remove_precursor_tol: 2.0
+
+cohorts:
+  primary:
+    validation:
+      status: ready
+      ninespecies_v2:
+        retrieval_config: configs/probing_tasks/ninespecies_v2_paper_validation_retrieval.yaml
+        pair_config: configs/probing_tasks/ninespecies_v2_paper_validation_pairs.yaml
+      bacterial:
+        retrieval_config: configs/probing_tasks/bacterial_paper_validation_retrieval.yaml
+        pair_config: configs/probing_tasks/bacterial_paper_validation_pairs.yaml
+      kingdoms:
+        retrieval_config: configs/probing_tasks/kingdoms_paper_validation_retrieval.yaml
+        pair_config: configs/probing_tasks/kingdoms_paper_validation_pairs.yaml
+    locked_test:
+      status: ready
+      ninespecies_v2:
+        retrieval_config: configs/probing_tasks/ninespecies_v2_paper_test_retrieval.yaml
+        pair_config: configs/probing_tasks/ninespecies_v2_paper_test_pairs.yaml
+      bacterial:
+        retrieval_config: configs/probing_tasks/bacterial_paper_test_retrieval.yaml
+        pair_config: configs/probing_tasks/bacterial_paper_test_pairs.yaml
+      kingdoms:
+        retrieval_config: configs/probing_tasks/kingdoms_paper_test_retrieval.yaml
+        pair_config: configs/probing_tasks/kingdoms_paper_test_pairs.yaml
+
+  charge2to4:
+    locked_test:
+      status: ready
+      ninespecies_v2:
+        retrieval_config: configs/probing_tasks/ninespecies_v2_paper_test_retrieval.yaml
+        pair_config: configs/probing_tasks/ninespecies_v2_paper_test_pairs.yaml
+        retrieval_parquet: /path/to/data/probing_datasets/ninespecies_v2_paper_test/charge2to4/retrieval.parquet
+        pair_spectra: /path/to/data/probing_datasets/ninespecies_v2_paper_test/charge2to4/pair_discrimination/spectra.parquet
+        pairs: /path/to/data/probing_datasets/ninespecies_v2_paper_test/charge2to4/pair_discrimination/pairs.parquet
+        retrieval_manifest: /path/to/data/probing_datasets/ninespecies_v2_paper_test/charge2to4/manifest.json
+        pair_manifest: /path/to/data/probing_datasets/ninespecies_v2_paper_test/charge2to4/manifest.json
+      bacterial:
+        retrieval_config: configs/probing_tasks/bacterial_paper_test_retrieval.yaml
+        pair_config: configs/probing_tasks/bacterial_paper_test_pairs.yaml
+        retrieval_parquet: /path/to/data/probing_datasets/bacterial_paper_benchmarks/test_peptide_disjoint/charge2to4/retrieval.parquet
+        pair_spectra: /path/to/data/probing_datasets/bacterial_paper_benchmarks/test_peptide_disjoint/charge2to4/pair_discrimination/spectra.parquet
+        pairs: /path/to/data/probing_datasets/bacterial_paper_benchmarks/test_peptide_disjoint/charge2to4/pair_discrimination/pairs.parquet
+        retrieval_manifest: /path/to/data/probing_datasets/bacterial_paper_benchmarks/test_peptide_disjoint/charge2to4/manifest.json
+        pair_manifest: /path/to/data/probing_datasets/bacterial_paper_benchmarks/test_peptide_disjoint/charge2to4/manifest.json
+      kingdoms:
+        retrieval_config: configs/probing_tasks/kingdoms_paper_test_retrieval.yaml
+        pair_config: configs/probing_tasks/kingdoms_paper_test_pairs.yaml
+        retrieval_parquet: /path/to/data/probing_datasets/kingdoms_paper_benchmarks/test/charge2to4/retrieval.parquet
+        pair_spectra: /path/to/data/probing_datasets/kingdoms_paper_benchmarks/test/charge2to4/pair_discrimination/spectra.parquet
+        pairs: /path/to/data/probing_datasets/kingdoms_paper_benchmarks/test/charge2to4/pair_discrimination/pairs.parquet
+        retrieval_manifest: /path/to/data/probing_datasets/kingdoms_paper_benchmarks/test/charge2to4/manifest.json
+        pair_manifest: /path/to/data/probing_datasets/kingdoms_paper_benchmarks/test/charge2to4/manifest.json

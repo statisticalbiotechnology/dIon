@@ -1,0 +1,17 @@
+numpy>=1.23
+pyarrow>=12,<16
+pyteomics>=4.6
+scipy
+pandas
+scikit-learn
+sortedcontainers
+einops
+spectrum_utils
+pylance>=1.0.2
+lightning==2.6.0
+wandb>=0.12.10
+tqdm
+matplotlib
+datasets
+jiwer
+path

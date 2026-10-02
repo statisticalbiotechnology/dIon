@@ -1,0 +1,14 @@
+Bootstrap: localimage
+From: pytorch-ngc-26.06-slingshot.sif
+
+%files
+    apptainer/requirements-container.txt /requirements-container.txt
+
+%post
+    set -eu
+    python -m pip install --no-cache-dir --root-user-action=ignore --upgrade pip
+    python -m pip install --no-cache-dir --root-user-action=ignore -r /requirements-container.txt
+    rm -f /requirements-container.txt
+
+%environment
+    export PYTHONUNBUFFERED=1

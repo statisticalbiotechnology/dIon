@@ -1,0 +1,21 @@
+dense_precursor_counterfactual_evaluation:
+  # Same locked NineSpecies V2 validation intervention as the pooled study.
+  retrieval_config_path: configs/probing_tasks/ninespecies_v2_paper_validation_retrieval.yaml
+  # Cluster B mirror of the locked table referenced by the Cluster A config.
+  retrieval_parquet_path: /path/to/data/probing_datasets/ninespecies_v2_paper_validation/retrieval.parquet
+  seed: 20260818
+  max_pairs_per_partition: 500
+  extraction:
+    batch_size: 128
+    num_workers: 0
+    pin_memory: true
+  mixing:
+    distractor_peak_fraction: 1.0
+    condition_separation_ppm: 10.0
+    neutral_mass_separation_ppm: 10.0
+    merge_ppm: 5.0
+  matching:
+    # A/B-merged peaks are excluded; source-only m/z values should match exactly.
+    source_peak_match_ppm: 0.01
+  output:
+    report_path:

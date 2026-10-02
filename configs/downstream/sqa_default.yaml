@@ -1,0 +1,20 @@
+task: sqa
+dataset_name: sqa
+top_peaks: 150
+
+sqa:
+  anneal_lr: true
+  anneal_per_step: true
+  lr_start: 1.0e-11
+  blr: 5.0e-4
+  lr_end: 1.0e-4
+  warmup_duration: 100000
+  decay_delay: 0
+  decay_duration: 1200000
+  batch_size: 128
+  ref_batch_size: 128
+  label_smoothing: 0
+  weight_decay: 0
+  epochs: 50
+  subset: 0
+  decoder_dropout: 0

@@ -1,0 +1,31 @@
+# create a conda env with 'conda env create -f environment.yml'
+# or 'mamba env create -f environment.yml'
+name: dIon-env
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - python=3.10
+  - numpy>=1.23
+  - libopenblas=*=*pthreads* # To avoid two OpenMP runtimes problem on macOS, can remove on Linux
+  - pyarrow>=12,<16
+  - pyteomics>=4.6
+  - scipy
+  - pandas
+  - scikit-learn
+  - pytest
+  - sortedcontainers
+  - einops
+  - spectrum_utils
+  - pip
+  - pip:
+      - pylance>=1.0.2
+      - torch==2.9.1
+      - torchvision
+      - lightning==2.6.0
+      - wandb>=0.12.10
+      - tqdm
+      - matplotlib
+      - datasets
+      - jiwer
+      - path

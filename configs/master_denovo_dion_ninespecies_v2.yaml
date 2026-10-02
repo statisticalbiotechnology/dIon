@@ -1,0 +1,65 @@
+# DINOv2-initialized de novo fine-tuning on NineSpecies V2.
+
+# Generic paths
+data_root_dir: /path/to/data/bacteria_PXD010000__PXD010613/no_labels/
+output_dir: /path/to/checkpoints/checkpoint
+log_dir: /path/to/project/logs/log
+embedding_dir: /path/to/project/embeddings_cache
+wandb_project: denovo
+wandb_entity: null
+log_wandb: 1
+num_workers: -1
+matmul_precision: high
+precision: 32-true
+
+# Checkpointing
+save_top_k: 5
+save_last: 1
+every_n_epochs: 1
+remove_ckpt: 0
+
+# Peak filtering
+peak_filter_method: default
+intensity_scaling: basepeak
+min_intensity: 0.0001
+min_mz: 0
+max_mz: 2500
+max_length: 30
+max_peaks: 150
+
+# Must match the DINOv2 bacteria checkpoints.
+use_mass: 1
+use_charge: 1
+max_charge: 10
+encoder_model: encoder_larger_deeper
+decoder_model: casanovo_decoder
+cls_token: 0
+cross_attend: 1
+
+# Training defaults. Keep batch_size task-local unless overridden on CLI.
+accum_iter: 1
+batch_size: -1
+scale_lr_by_batchsize: 0
+seed: 0
+
+# Load a pretrained DINOv2 wrapper checkpoint and extract its teacher encoder.
+pretrain: 0
+encoder_weights:
+pretrain_config: configs/pretrain/dion_noibot_nokoleo_default.yaml
+pretraining_task: dion
+probe_on_fit_start: 0
+probe_every_n_steps: 6000
+trinary_type: "mz"
+mask_ratio: 0.75
+
+# Downstream task
+downstream_config: configs/downstream/denovo_ninespecies_v2.yaml
+downstream_task: denovo_tf
+downstream_root_dir: /path/to/data/9_species_V2/lance_species
+downstream_weights:
+limit_train_batches: 1.0
+limit_val_batches: 200
+limit_test_batches: 1.0
+validate_every_n_epochs: 1
+validate_on_end: 0
+test_on_end: 1

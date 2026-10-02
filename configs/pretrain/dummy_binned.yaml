@@ -1,0 +1,3 @@
+# Fixed binned-spectrum baseline. No pretraining objective or checkpoint.
+dummy:
+  dropout: 0

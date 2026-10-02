@@ -1,0 +1,63 @@
+# Canonical-indexed autoregressive prediction output on the deterministic 100k-per-species
+# Kingdoms cap. This is otherwise a literal copy of the proven MSKB prediction
+# configuration so framework-required task fields cannot drift.
+task: denovo
+dataset_name: configurable_lance
+tokenizer:
+  source: numeric_mass_delta_manifest
+  manifest: configs/tokenizers/pa11.json
+  special_tokens:
+    pad_token: X
+    bos_token: <EOS>
+    eos_token: <EOS>
+    add_unk_token: false
+top_peaks: 200
+pep_length:
+- 0
+- 100
+charge:
+- 0
+- 10
+buffer_size: 10000
+label_name: seq
+precursor_mz_name: precursor_mz
+precursor_mass_name: false
+# LanceDataModule constructs train/val paths even in eval_only mode. The
+# Kingdoms validation table is inert because the job sets --validate_on_end 0.
+train_lance: validation.lance
+val_lance: validation.lance
+test_lance: test.lance
+denovo_tf:
+  encoder_precursor_conditioning: conditioned
+  gradient_clip_val: 2.0
+  batch_size: 100
+  decoder_dropout: 0.25
+  max_length: 100
+  reverse: true
+  precursor_mass_tol: 50
+  isotope_error_range:
+  - 0
+  - 1
+  min_peptide_len: 6
+  n_beams: 1
+  top_match: 1
+  calculate_precision: true
+  train_label_smoothing: 0.0
+  learning_rate: 0.0001
+  weight_decay: 0.0
+  warmup_steps: 6250
+  cosine_period_steps: 149200
+  epochs: 80
+  checkpoint_monitor: denovo_tf_val_pep_prec
+  checkpoint_mode: max
+  # Persistent exact-index CSV output; requires the fields below.
+  log_predictions: true
+  prediction_table: true
+  exact_eval_sharding: true
+  # Distributed-safe Casanovo-matched counts and metrics for every species.
+  log_species_metrics: true
+metadata_columns:
+- peak_file
+- scan_id
+- title
+- species

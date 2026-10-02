@@ -1,0 +1,3 @@
+# Placeholder task configuration for scratch downstream-only runs.
+dummy:
+  dropout: 0

@@ -1,0 +1,25 @@
+# Frozen-encoder spectral-quality classification on the local custom
+# PXD004452/PXD009737 run-/project-disjoint benchmark.
+task: sqa
+dataset_name: sqa
+top_peaks: 150
+
+sqa:
+  # The inherited SQA base LR and head regularization are retained. The
+  # schedule is epoch-based because this benchmark has fewer train batches
+  # than the legacy corpus and should be portable across GPU counts.
+  anneal_lr: true
+  anneal_per_step: false
+  lr_start: 1.0e-11
+  blr: 5.0e-4
+  lr_end: 1.0e-4
+  warmup_duration: 3
+  decay_delay: 0
+  decay_duration: 47
+  batch_size: 128
+  ref_batch_size: 128
+  label_smoothing: 0
+  weight_decay: 0
+  epochs: 50
+  subset: 0
+  decoder_dropout: 0

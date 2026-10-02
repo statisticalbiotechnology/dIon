@@ -1,0 +1,18 @@
+embedding_evaluation:
+  name: kingdoms_paper_validation_retrieval
+  dataset:
+    parquet_path: /path/to/data/probing_datasets/kingdoms_paper_benchmarks/validation/retrieval.parquet
+    peptide_id_column: peptide_id
+    partition_column: species
+  selection:
+    seed: 20260817
+    max_peptides_per_partition: 20000
+    max_spectra_per_peptide: 10
+  extraction: {batch_size: 256, num_workers: 2, pin_memory: true, show_progress: true}
+  metrics_device: model
+  retrieval: {enabled: true, metric: cosine, ks: [1, 5, 10], query_seed: 20260817, query_batch_size: 128, show_progress: true}
+  mass_controlled_retrieval: {enabled: true, ppm_tolerance: 10.0}
+  cross_charge_retrieval: {enabled: true, neutral_mass_ppm_tolerance: 10.0}
+  compactness: {enabled: true, seed: 20260817, max_between_samples: 1000, show_progress: true, silhouette: {enabled: false}}
+  output: {write_report: true, report_tag: kingdoms_val, report_path:, print_report: true}
+  online: {enabled: false}

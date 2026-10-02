@@ -1,0 +1,46 @@
+# Fast development-only dense monitor for repeated DINO/DINOv2 probing.
+dense_denovo_probe:
+  online_precursor_conditioning_modes: [conditioned]
+  dataset:
+    train_lance: /path/to/data/denovo_mskb_v5_dense_probe_16aa_short_v2/train.lance
+    val_lance: /path/to/data/denovo_mskb_v5_dense_probe_16aa_short_v2/val.lance
+    test_lance: /path/to/data/denovo_mskb_v5_dense_probe_16aa_short_v2/test.lance
+    label_name: seq
+    precursor_mz_name: precursor_mz
+    precursor_mass_name: false
+
+  # Exact unmodified materialized vocabulary; no modified token rewriting.
+  vocab: ADEFGIKLNPQRSTVY
+  max_peptide_length: 10
+  seed: 1337
+
+  extraction:
+    batch_size: 64
+    num_workers: 0
+    pin_memory: true
+  # 8,800 x 200 x 1,024 cached memories are about 3.4 GiB at float16.
+  cache_dtype: float16
+
+  decoder:
+    n_head: 2
+    dim_feedforward: 128
+    n_layers: 2
+    dropout: 0.0
+  # Match canonical denovo_tf inference and Casanovo mass-aware evaluation.
+  decoding:
+    n_beams: 1
+    top_match: 1
+    precursor_mass_tol: 50
+    isotope_error_range: [0, 1]
+    min_peptide_len: 6
+  training:
+    # Fixed budget for stable online comparison across SSL checkpoints.
+    batch_size: 32
+    learning_rate: 3.0e-4
+    weight_decay: 0.0
+    epochs: 4
+
+  output:
+    write_report: true
+    report_path:
+    print_report: true

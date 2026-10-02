@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "status": "frozen",
+  "selection_basis": "Hybrid-300-last raw-backbone test cohort, fixed before inspecting these held-out results. Both conditioned and null encoder modes are retained for all three paper corpora.",
+  "representation": {
+    "models": [
+      {
+        "model_id": "hybrid_300_last",
+        "conditionings": ["conditioned", "null"],
+        "corpora": ["ninespecies_v2", "bacterial", "kingdoms"]
+      }
+    ]
+  },
+  "downstream": []
+}
