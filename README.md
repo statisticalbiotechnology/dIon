@@ -146,6 +146,12 @@ resume procedure.
 
 ## Data and Evaluation
 
+The datasets are available at
+[alfred-n/dIon-datasets](https://huggingface.co/datasets/alfred-n/dIon-datasets).
+The dataset repository includes individual dataset cards, provenance manifests,
+and the training and evaluation inputs. For canonical pretraining, see the
+[300-epoch reproduction guide](docs/repro/dion_300epoch_pretraining.md#data).
+
 Set portable roots before using dataset and evaluation scripts:
 
 ```bash

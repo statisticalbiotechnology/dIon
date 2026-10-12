@@ -49,10 +49,26 @@ effective global batch or treat the change as a new training recipe.
 
 ## Data
 
-The training corpus is the annotated bacterial PXD010000/PXD010613 Lance
-dataset described by the repository's dataset documentation. Point
-`--data_root_dir` at its local materialization. The pretraining config expects
-`dataset_name: bacteria`.
+The training corpus and evaluation inputs are hosted at
+[alfred-n/dIon-datasets](https://huggingface.co/datasets/alfred-n/dIon-datasets).
+Download the bacterial Lance corpus with:
+
+```bash
+export DATA_ROOT=/path/to/data/dIon-datasets
+hf download alfred-n/dIon-datasets --repo-type dataset \
+  --include "pretraining/bacterial_ssl/**" --local-dir "$DATA_ROOT"
+```
+
+Point `--data_root_dir` at `$DATA_ROOT/pretraining/bacterial_ssl`, which contains
+`train.lance`, `val.lance`, `test.lance`, and its manifest. The pretraining
+configuration expects `dataset_name: bacteria`.
+
+For online monitoring, also download `probes/end_aa/` and the validation
+artifacts under `representation_benchmarks/{bacterial,ninespecies,kingdoms}/`.
+Update the probe and pair-evaluation configuration paths to their local
+locations. Callback subsets are selected at runtime from these validation
+artifacts; they do not require separate datasets. Each released dataset has a
+README describing its source and construction.
 
 ## Phase 1
 
@@ -63,7 +79,7 @@ the surrounding `srun` and OFI/NCCL settings are site-specific.
 ```bash
 python -m src.main \
   --config config_cluster_b/master_dion_hybrid_distractor_null_local_300epochs_part1.yaml \
-  --data_root_dir "$DATA_ROOT/bacteria_PXD010000__PXD010613/annotated_regenerated_v3" \
+  --data_root_dir "$DATA_ROOT/pretraining/bacterial_ssl" \
   --output_dir "$CHECKPOINT_ROOT/dion_300epoch" \
   --log_dir "$RESULTS_ROOT/dion_300epoch/logs" \
   --embedding_dir "$RESULTS_ROOT/dion_300epoch/embedding_cache" \
@@ -95,7 +111,7 @@ python -m src.main \
   --config config_cluster_b/master_dion_hybrid_distractor_null_local_300epochs.yaml \
   --encoder_weights "$RESUME_CKPT" \
   --resume 1 \
-  --data_root_dir "$DATA_ROOT/bacteria_PXD010000__PXD010613/annotated_regenerated_v3" \
+  --data_root_dir "$DATA_ROOT/pretraining/bacterial_ssl" \
   --output_dir "$CHECKPOINT_ROOT/dion_300epoch" \
   --log_dir "$RESULTS_ROOT/dion_300epoch/logs" \
   --embedding_dir "$RESULTS_ROOT/dion_300epoch/embedding_cache" \
@@ -123,7 +139,7 @@ batch on one GPU with one training and one validation batch:
 ```bash
 python -m src.main \
   --config config_cluster_b/master_dion_hybrid_distractor_null_local_300epochs_part1.yaml \
-  --data_root_dir "$DATA_ROOT/bacteria_PXD010000__PXD010613/annotated_regenerated_v3" \
+  --data_root_dir "$DATA_ROOT/pretraining/bacterial_ssl" \
   --output_dir "$CHECKPOINT_ROOT/dion_smoke" \
   --log_dir "$RESULTS_ROOT/dion_smoke/logs" \
   --accelerator gpu \
