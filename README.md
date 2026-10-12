@@ -5,6 +5,24 @@ peptide-sequencing model. This repository contains the model implementation,
 training and evaluation code, dataset construction utilities, and the exact
 configuration family used in the accompanying publication.
 
+## Citation
+
+If you use dIon, please cite the
+[preprint](https://arxiv.org/abs/2610.06282). Citation metadata is provided in
+[CITATION.cff](CITATION.cff).
+
+```bibtex
+@misc{nilsson2026dion,
+  title = {dIon: Fragmentation-Based Invariance for Self-Supervised Learning of Tandem Mass Spectra},
+  author = {Alfred Nilsson and Joel Lapin and Samuel H. Payne and Mathias Wilhelm and Lukas K{\"a}ll},
+  year = {2026},
+  eprint = {2610.06282},
+  archivePrefix = {arXiv},
+  primaryClass = {cs.LG},
+  url = {https://arxiv.org/abs/2610.06282}
+}
+```
+
 ## Checkpoints
 
 Release `v0.1.0` is hosted at [alfred-n/dIon](https://huggingface.co/alfred-n/dIon):

@@ -1,0 +1,36 @@
+cff-version: 1.2.0
+message: "If you use dIon, please cite the preprint below."
+type: software
+title: dIon
+authors:
+  - name: "dIon contributors"
+repository-code: "https://github.com/statisticalbiotechnology/dIon"
+url: "https://github.com/statisticalbiotechnology/dIon"
+license: Apache-2.0
+keywords:
+  - tandem mass spectrometry
+  - proteomics
+  - self-supervised learning
+  - de novo peptide sequencing
+preferred-citation:
+  type: article
+  title: "dIon: Fragmentation-Based Invariance for Self-Supervised Learning of Tandem Mass Spectra"
+  authors:
+    - family-names: Nilsson
+      given-names: Alfred
+    - family-names: Lapin
+      given-names: Joel
+    - family-names: Payne
+      given-names: "Samuel H."
+    - family-names: Wilhelm
+      given-names: Mathias
+    - family-names: "K\u00e4ll"
+      given-names: Lukas
+  journal: arXiv
+  year: 2026
+  date-published: "2026-10-05"
+  url: "https://arxiv.org/abs/2610.06282"
+  identifiers:
+    - type: other
+      value: "arXiv:2610.06282"
+      description: "Preprint identifier"
