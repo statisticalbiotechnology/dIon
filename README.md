@@ -1,5 +1,9 @@
 # dIon
 
+[![Hugging Face checkpoints](https://img.shields.io/badge/Hugging_Face-Checkpoints-FFD21E?style=for-the-badge&logo=huggingface)](https://huggingface.co/alfred-n/dIon)
+[![Hugging Face datasets](https://img.shields.io/badge/Hugging_Face-Datasets-FFD21E?style=for-the-badge&logo=huggingface)](https://huggingface.co/datasets/alfred-n/dIon-datasets)
+[![arXiv preprint](https://img.shields.io/badge/arXiv-2610.06282-B31B1B?style=for-the-badge&logo=arxiv)](https://arxiv.org/abs/2610.06282)
+
 dIon is a foundation encoder for tandem mass spectra and an associated de novo
 peptide-sequencing model. This repository contains the model implementation,
 training and evaluation code, dataset construction utilities, and the exact
